@@ -1,5 +1,5 @@
 import psycopg2
-from flask import Flask, g, request, session
+from flask import Flask, g, request, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -37,7 +37,7 @@ def close_db(e=None):
         db.close()
 
 
-##---------------------##
+##-----------Database!----------##
 
 
 @app.route("/validate", methods=["POST"])
@@ -51,8 +51,8 @@ def validate():
         "SELECT * FROM auth WHERE username = %s",
         (username,),
     )
-    # confirm the vlaue of the "Role" column if the user exists
-    # if the user is not found, the value of the "Role" column will be None
+    # if the user is not found or the password is incorrect return an error Message
+    # else return the user role
     user = cur.fetchone()
     print(user)
     if user is None or not check_password_hash(user[2], password):
@@ -64,19 +64,103 @@ def validate():
         return {"result": user[3]}
 
 
+@app.route("/addUser", methods=["POST", "GET"])
+def addUser():
+    """
+    Adds a new user to the database
+    data will include "name","address", "phone", "email", "DOB", "blood type", "weight", "password", type = (either "Donor" or "Recipient")
+    + "disease" history which is in the format "disease1, disease2, ..."
+    """
+    # data = request.get_json()
+    data = {
+        "name": "test",
+        "address": "test",
+        "phone": "05112",
+        "email": "test124@me.com",
+        "dob": "2000-01-01",
+        "blood type": "A+",
+        "weight": "69",
+        "password": "123456",
+        "type": "donor",
+        "disease": "aids, cancer",
+    }
+    # validate the blood type
+    if data.get("blood type") not in ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]:
+        return {"result": "Invalid blood type"}
+
+    # validate the type
+    if data.get("type") not in ["donor", "recipient"]:
+        return {"result": "Invalid type"}
+
+    # validate the weight
+    if int(data.get("weight")) < 0 or int(data.get("weight")) > 200:
+        return {"result": "Invalid weight"}
+
+    # insert the data into the database
+    db = get_db()
+    cur = db.cursor()
+    # generate id by counting the number of rows in the table
+    cur.execute("SELECT COUNT(*) FROM person")
+    id = cur.fetchone()[0]
+
+    # insert the data into the person table
+    cur.execute(
+        "INSERT INTO person (id, name, address, phone, email, dob) VALUES (%s, %s, %s, %s, %s, %s)",
+        (
+            id,
+            data.get("name"),
+            data.get("address"),
+            data.get("phone"),
+            data.get("email"),
+            data.get("dob"),
+        ),
+    )
+    # insert the data into the user table (id, blood type, weight)
+    cur.execute(
+        'INSERT INTO "user" VALUES (%s, %s, %s)',
+        (id, data.get("blood type"), data.get("weight")),
+    )
+
+    # insert the data into the auth table (id, username, password, role)
+    cur.execute(
+        "INSERT INTO auth VALUES (%s, %s, %s, %s)",
+        (
+            id,
+            data.get("email"),
+            generate_password_hash(data.get("password")),
+            "user",
+        ),
+    )
+
+    # insert the data into the disease table
+    diseases = data.get("disease").split(",")
+    for disease in diseases:
+        cur.execute(
+            "INSERT INTO disease_history VALUES (%s, %s)",
+            (id, disease),
+        )
+
+    # if the user is a donor insert the data into the donor table
+    if data.get("type") == "donor":
+        cur.execute(
+            "INSERT INTO donor VALUES (%s)",
+            (id,),
+        )
+    else:
+        # if the user is a recipient insert the data into the recipient table
+        cur.execute(
+            "INSERT INTO recipient VALUES (%s)",
+            (id,),
+        )
+    print("done")
+    return {"result": "success"}
+
+
 # --------------------- html ---------------------#
-@app.route("/")
-def home():
-    return app.send_static_file("index.html")
-
-@app.route("/staff")
-def staff():
-    return app.send_static_file("staff.html")
-
-@app.route("/user")
-def user():
-    return app.send_static_file("user.html")
-
+@app.route("/", defaults={"path": "index.html"})
+@app.route("/<path:path>")
+def serve_static(path):
+    return send_from_directory(app.static_folder, path)
 
 
 if __name__ == "__main__":
