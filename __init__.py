@@ -56,5 +56,12 @@ def validate():
         return user[2]
 
 
+# --------------------- html ---------------------#
+@app.route("/")
+def home():
+    print("!@#$%^&*()")
+    return app.send_static_file("index.html")
+
+
 if __name__ == "__main__":
     app.run(debug=True, port=6969)
