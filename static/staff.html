@@ -1,95 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Staff</title>
-</head>
-<style>
+  </head>
+  <style>
     body {
-        background: #444;
+      background: #444;
 
-        grid-gap: 20px;
-        
+      grid-gap: 20px;
     }
-    h2,h3{
-        text-align: center;
-        color: white;
+    h2,
+    h3 {
+      text-align: center;
+      color: white;
     }
-    .buttonContainer{
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border-radius: 10px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+    .buttonContainer {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-radius: 10px;
+      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
     }
-    button{
-        width: 100%;
-        padding: 20px 10px;
-        background: lightblue;
-        border-radius: 10px;
-        transition: 0.3s;
+    button {
+      width: 100%;
+      padding: 20px 10px;
+      background: lightblue;
+      border-radius: 10px;
+      transition: 0.3s;
     }
-    button:hover{
-        background: #6eb4ea;
-        color: #fff;
-        cursor: pointer;
+    button:hover {
+      background: #6eb4ea;
+      color: #fff;
+      cursor: pointer;
     }
-</style>
-<body>
+  </style>
+  <body>
     <h2>Welcome</h2>
-    <h3>Available Options: </h3>
+    <h3>Available Options:</h3>
     <div class="buttonContainer">
-        <button class="addBtn">Add Donor/Recipient</button>
-        <button class="DelBtn">Delete Donor/Recipient</button>
-        <button class="UpdBtn">Edit Donor/Recipient info</button>
-        <button class="SearchBtn">Search Donor/Recipient History</button>
-        <button class="BloodReq">Process Blood Requests</button>
-        <button class="driveBtn">Initiate Blood Collection Drive</button>
-        <button class="dashBoardBtn">Generate Dashboard/Report</button>
-        <button class="notification">Send Notification</button>
-        <button class="logOut">Log Out</button>
+      <button class="addBtn">Add Donor/Recipient</button>
+      <button class="DelBtn">Delete Donor/Recipient</button>
+      <button class="UpdBtn">Edit Donor/Recipient info</button>
+      <button class="SearchBtn">Search Donor/Recipient History</button>
+      <button class="BloodReq">Process Blood Requests</button>
+      <button class="driveBtn">Initiate Blood Collection Drive</button>
+      <button class="dashBoardBtn">Generate Dashboard/Report</button>
+      <button class="notification">Send Notification</button>
+      <button class="logOut">Log Out</button>
     </div>
-    
+
     <script>
-        const addBtn = document.querySelector('.addBtn');
-        const DelBtn = document.querySelector('.DelBtn');
-        const UpdBtn = document.querySelector('.UpdBtn');
-        const SearchBtn = document.querySelector('.SearchBtn');
-        const BloodReq = document.querySelector('.BloodReq');
-        const driveBtn = document.querySelector('.driveBtn');
-        const dashBoardBtn = document.querySelector('.dashBoardBtn');
-        const notification = document.querySelector('.notification');
-        const logOut = document.querySelector('.logOut');
+      const addBtn = document.querySelector(".addBtn");
+      const DelBtn = document.querySelector(".DelBtn");
+      const UpdBtn = document.querySelector(".UpdBtn");
+      const SearchBtn = document.querySelector(".SearchBtn");
+      const BloodReq = document.querySelector(".BloodReq");
+      const driveBtn = document.querySelector(".driveBtn");
+      const dashBoardBtn = document.querySelector(".dashBoardBtn");
+      const notification = document.querySelector(".notification");
+      const logOut = document.querySelector(".logOut");
 
-        addBtn.addEventListener('click', () => {
-            window.location.href = '/addUser';
-        });
-        DelBtn.addEventListener('click', () => {
-            window.location.href = '/deleteUser';
-        });
-        UpdBtn.addEventListener('click', () => {
-            window.location.href = '/editUser';
-        });
-        SearchBtn.addEventListener('click', () => {
-            window.location.href = '/searchUser';
-        });
-        BloodReq.addEventListener('click', () => {
-            window.location.href = '/bloodRequest';
-        });
-        driveBtn.addEventListener('click', () => {
-            window.location.href = '/bloodDrive';
-        });
-        dashBoardBtn.addEventListener('click', () => {
-            window.location.href = '/dashboard';
-        });
-        notification.addEventListener('click', () => {
-            window.location.href = '/notification';
-        });
-        logOut.addEventListener('click', () => {
-            window.location.href = '/';
-        });
-
+      addBtn.addEventListener("click", () => {
+        window.location.href = "/addUser.html";
+      });
+      DelBtn.addEventListener("click", () => {
+        window.location.href = "/deleteUser.html";
+      });
+      UpdBtn.addEventListener("click", () => {
+        window.location.href = "/editUser.html";
+      });
+      SearchBtn.addEventListener("click", () => {
+        window.location.href = "/searchUser.html";
+      });
+      BloodReq.addEventListener("click", () => {
+        window.location.href = "/bloodRequest.html";
+      });
+      driveBtn.addEventListener("click", () => {
+        window.location.href = "/bloodDrive.html";
+      });
+      dashBoardBtn.addEventListener("click", () => {
+        window.location.href = "/dashboard.html";
+      });
+      notification.addEventListener("click", () => {
+        window.location.href = "/notification.html";
+      });
+      logOut.addEventListener("click", () => {
+        window.location.href = "/";
+      });
     </script>
-</body>
+  </body>
 </html>
