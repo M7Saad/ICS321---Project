@@ -27,14 +27,7 @@
         position: relative;
         margin-bottom: 20px;
     }
-    .login__icon {
-        color: #ccc;
-        font-size: 18px;
-        position: absolute;
-        top: 50%;
-        left: 18px;
-        transform: translateY(-50%);
-    }
+
     .login__input {
         display: block;
         width: 80%;
@@ -73,40 +66,8 @@
     .login__submit:focus {
         outline: 0;
     }
-    .login__forgotten-password {
-        display: block;
-        text-align: center;
-        font-size: 14px;
-        color: #ccc;
-        transition: 0.3s;
-    }
-    .login__forgotten-password:hover {
-        color: #aaa;
-    }
-    .login__signup {
-        font-size: 14px;
-        color: #ccc;
-        transition: 0.3s;
-    }
-    .login__signup:hover {
-        color: #aaa;
-    }
-    .login__container {
-        position: relative;
-        width: 640px;
-        max-width: 100%;
-        margin: 0 auto;
-        padding: 0 20px;
-    }
-    .login__container:before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 1px;
-        height: 100%;
-        background: #ccc;
-    }
+
+
 
 </style>    
 
@@ -118,26 +79,18 @@
 		<!--	<form class="login" action="all_users.html" method="post"> -->
 			<form class="login" id="loginForm">
 				<div class="login__field">
-					<i class="login__icon fas fa-user"></i>
 					<input type="text" class="login__input" id="username" placeholder="User name / Email" required>
 				</div>
 				<div class="login__field">
-					<i class="login__icon fas fa-lock"></i>
 					<input type="password" class="login__input" id="password" placeholder="Password" required>
 				</div>
 				<button class="button login__submit" type="button" onclick="login()" >
 					<span class="button__text">Log In Now</span>
-					<i class="button__icon fas fa-chevron-right"></i>
 				</button>				
 			</form>
 
 		</div>
-		<div class="screen__background">
-			<span class="screen__background__shape screen__background__shape4"></span>
-			<span class="screen__background__shape screen__background__shape3"></span>		
-			<span class="screen__background__shape screen__background__shape2"></span>
-			<span class="screen__background__shape screen__background__shape1"></span>
-		</div>		
+
 	</div>
 </div>
 <script>
