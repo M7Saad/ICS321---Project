@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - A Pen by Mohithpoojary</title>
+
+</head>
+<style>
+    body{
+        background: #444;
+    }
+    .login {
+        width: 60%;
+        margin: 0 auto;
+        padding: 20px 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: #111;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+    .login__field {
+        width: 80%;
+        position: relative;
+        margin-bottom: 20px;
+    }
+
+    .login__input {
+        display: block;
+        width: 80%;
+        padding: 16px 16px 16px 50px;
+        background: #fafafa;
+        color: #757575;
+        font-family: inherit;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        transition: 0.3s;
+    }
+    .login__input:focus {
+        outline: 0;
+        border-color: #6eb4ea;
+    }
+    .login__submit {
+        display: block;
+        width: 50%;
+        padding: 16px;
+        background: #6eb4ea;
+        color: #fff;
+        font-family: inherit;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 0;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .login__submit:hover {
+        background: #55acee;
+    }
+    .login__submit:active {
+        background: #3c8dbc;
+    }
+    .login__submit:focus {
+        outline: 0;
+    }
+
+
+
+</style>    
+
+<body>
+<!-- partial:index.partial.html -->
+<div class="container">
+	<div class="screen">
+		<div class="screen__content">
+		<!--	<form class="login" action="all_users.html" method="post"> -->
+			<form class="login" id="loginForm">
+				<div class="login__field">
+					<input type="text" class="login__input" id="username" placeholder="User name / Email" required>
+				</div>
+				<div class="login__field">
+					<input type="password" class="login__input" id="password" placeholder="Password" required>
+				</div>
+				<button class="button login__submit" type="button" onclick="login()" >
+					<span class="button__text">Log In Now</span>
+				</button>				
+			</form>
+
+		</div>
+
+	</div>
+</div>
+<script>
+
+    function login() {
+        var username = document.getElementById('username').value;
+        var password = document.getElementById('password').value;
+
+        // Send username and password to the backend
+        fetch('/validate', {
+            method: 'POST',
+            body: JSON.stringify({username, password }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result === 'staff') {
+                // Redirect to admin page
+                window.location.href = '/staff';
+            } else if (result === 'user') {
+                // Redirect to user page
+                window.location.href = '/user';
+            } else {
+                alert('Invalid username or password');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
+
+
+	</script>
+</body>
+</html>
