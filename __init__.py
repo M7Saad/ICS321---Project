@@ -2,9 +2,15 @@ import psycopg2
 from flask import Flask, g, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 # --------------------- setup ---------------------#
-app = Flask(__name__)
-app.secret_key = "allah y3een"
+def createapp():
+    app = Flask(__name__, static_folder="static")
+    app.secret_key = "allah y3een"
+    return app
+
+
+app = createapp()
 
 
 def get_db():
@@ -36,8 +42,9 @@ def close_db(e=None):
 
 @app.route("/validate", methods=["POST"])
 def validate():
-    username = request.form.get("username")
-    password = request.form.get("password")
+    data = request.get_json()
+    username = data.get("username")
+    password = data.get("password")
     db = get_db()
     cur = db.cursor()
     cur.execute(
@@ -47,20 +54,29 @@ def validate():
     # confirm the vlaue of the "Role" column if the user exists
     # if the user is not found, the value of the "Role" column will be None
     user = cur.fetchone()
+    print(user)
     if user is None or not check_password_hash(user[2], password):
-        return "False"
+        return {"result": "Invalid username or password"}
     else:
         session["user_id"] = user[0]
         session["user_name"] = user[1]
-        session["user_role"] = user[3]
-        return user[2]
+        session["user_role"] = user[3]  ## either "Staff", "user"
+        return {"result": user[3]}
 
 
 # --------------------- html ---------------------#
 @app.route("/")
 def home():
-    print("!@#$%^&*()")
     return app.send_static_file("index.html")
+
+@app.route("/staff")
+def staff():
+    return app.send_static_file("staff.html")
+
+@app.route("/user")
+def user():
+    return app.send_static_file("user.html")
+
 
 
 if __name__ == "__main__":
