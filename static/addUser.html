@@ -49,8 +49,9 @@
         border-color: #6eb4ea;
     }
     input[type=submit] {
+        margin-left: 30%;
         display: block;
-        width: 50%;
+        width: 30%;
         padding: 16px;
         background: #6eb4ea;
         color: #fff;
@@ -122,11 +123,11 @@
         <label for="diseaseHistory">Disease History:</label>
         <input type="text" id="diseaseHistory" name="diseaseHistory" placeholder="disease1, disease2, ..."><br><br>
     </div>
-
+</div>
     <input type="submit" value="Submit">
 
 
-    </div>
+    
 </form>    
 
 <script>
@@ -155,7 +156,7 @@
                 console.log(result);
                 if (result.result === "success") {
                     alert("User added successfully");
-                    window.location.href = "/staff";
+                    window.location.href = "staff.html";
                 } else {
                     alert("Error adding user");
                 }
