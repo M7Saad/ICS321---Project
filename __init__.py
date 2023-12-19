@@ -64,29 +64,17 @@ def validate():
         return {"result": user[3]}
 
 
-@app.route("/addUser", methods=["POST", "GET"])
+@app.route("/addUser", methods=["POST"])
 def addUser():
     """
     Adds a new user to the database
-    data will include "name","address", "phone", "email", "DOB", "blood type", "weight", "password", type = (either "Donor" or "Recipient")
+    data will include "name","address", "phone", "email", "DOB", "bloodtype", "weight", "password", type = (either "Donor" or "Recipient")
     + "disease" history which is in the format "disease1, disease2, ..."
     """
-    # data = request.get_json()
-    data = {
-        "name": "test",
-        "address": "test",
-        "phone": "05112",
-        "email": "test124@me.com",
-        "dob": "2000-01-01",
-        "blood type": "A+",
-        "weight": "69",
-        "password": "123456",
-        "type": "donor",
-        "disease": "aids, cancer",
-    }
-    # validate the blood type
-    if data.get("blood type") not in ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]:
-        return {"result": "Invalid blood type"}
+    data = request.get_json()
+    # validate the bloodtype
+    if data.get("bloodtype") not in ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"]:
+        return {"result": "Invalid bloodtype"}
 
     # validate the type
     if data.get("type") not in ["donor", "recipient"]:
@@ -115,10 +103,10 @@ def addUser():
             data.get("dob"),
         ),
     )
-    # insert the data into the user table (id, blood type, weight)
+    # insert the data into the user table (id, bloodtype, weight)
     cur.execute(
         'INSERT INTO "user" VALUES (%s, %s, %s)',
-        (id, data.get("blood type"), data.get("weight")),
+        (id, data.get("bloodtype"), data.get("weight")),
     )
 
     # insert the data into the auth table (id, username, password, role)
@@ -133,12 +121,13 @@ def addUser():
     )
 
     # insert the data into the disease table
-    diseases = data.get("disease").split(",")
-    for disease in diseases:
-        cur.execute(
-            "INSERT INTO disease_history VALUES (%s, %s)",
-            (id, disease),
-        )
+    if data.get("disease") != "":
+        diseases = data.get("disease").split(",")
+        for disease in diseases:
+            cur.execute(
+                "INSERT INTO disease_history VALUES (%s, %s)",
+                (id, disease),
+            )
 
     # if the user is a donor insert the data into the donor table
     if data.get("type") == "donor":
