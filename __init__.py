@@ -18,6 +18,7 @@ def get_db():
             host="localhost",
             port="5432",
         )
+        g.db.set_session(autocommit=True)
     return g.db
 
 
@@ -34,7 +35,7 @@ def close_db(e=None):
 
 
 @app.route("/validate", methods=["POST"])
-def validate(username, password):
+def validate():
     username = request.form.get("username")
     password = request.form.get("password")
     db = get_db()
@@ -56,6 +57,4 @@ def validate(username, password):
 
 
 if __name__ == "__main__":
-    print(generate_password_hash("123456"))
     app.run(debug=True, port=6969)
-    
