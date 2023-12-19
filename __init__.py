@@ -2,9 +2,15 @@ import psycopg2
 from flask import Flask, g, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
+
 # --------------------- setup ---------------------#
-app = Flask(__name__)
-app.secret_key = "allah y3een"
+def createapp():
+    app = Flask(__name__, static_folder="static")
+    app.secret_key = "allah y3een"
+    return app
+
+
+app = createapp()
 
 
 def get_db():
@@ -62,6 +68,15 @@ def validate():
 @app.route("/")
 def home():
     return app.send_static_file("index.html")
+
+@app.route("/staff")
+def staff():
+    return app.send_static_file("staff.html")
+
+@app.route("/user")
+def user():
+    return app.send_static_file("user.html")
+
 
 
 if __name__ == "__main__":
