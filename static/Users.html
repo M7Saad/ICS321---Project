@@ -128,46 +128,46 @@
         var inputs = row.querySelectorAll("input");
         var selects = row.querySelectorAll("select");
         var id = row.cells[0].textContent; // Get the ID from the first cell
-    
+
         if (event.target.textContent === "Edit") {
             // Enable editing
             inputs.forEach((input) => {
                 input.readOnly = false;
-                input.onchange = () => input.setAttribute('data-edited', 'true');
+                input.onchange = () => input.setAttribute("data-edited", "true");
             });
             selects.forEach((select) => {
                 select.disabled = false;
-                select.onchange = () => select.setAttribute('data-edited', 'true');
+                select.onchange = () => select.setAttribute("data-edited", "true");
             });
             event.target.textContent = "Save";
         } else {
             // Prepare data to send to backend
             var updatedData = { id: id };
-    
+
             inputs.forEach((input) => {
-                if (input.hasAttribute('data-edited')) {
+                if (input.hasAttribute("data-edited")) {
                     updatedData[input.getAttribute("name")] = input.value;
                 }
             });
-    
+
             selects.forEach((select) => {
-                if (select.hasAttribute('data-edited')) {
+                if (select.hasAttribute("data-edited")) {
                     updatedData[select.getAttribute("name")] = select.value;
                 }
             });
-    
-            sendDataToUpdate("/update-user", updatedData);
-    
+
+            sendDataToUpdate("/update-user", { row: updatedData }); // Pass the row data as part of the request body
+
             // Make fields read-only again and remove edited attribute
             inputs.forEach((input) => {
                 input.readOnly = true;
-                input.removeAttribute('data-edited');
+                input.removeAttribute("data-edited");
             });
             selects.forEach((select) => {
                 select.disabled = true;
-                select.removeAttribute('data-edited');
+                select.removeAttribute("data-edited");
             });
-    
+
             event.target.textContent = "Edit";
         }
     }
