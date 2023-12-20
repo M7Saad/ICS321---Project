@@ -161,14 +161,10 @@ def searchID():
     person = cur.fetchone()
     # get type of user
     cur.execute(
-        "SELECT * FROM donor WHERE id = %s",
+        "SELECT role FROM auth WHERE id = %s",
         (data.get("id"),),
     )
-    donor = cur.fetchone()
-    if donor is None:
-        type = "recipient"
-    else:
-        type = "donor"
+    type = cur.fetchone()[0]
     # get the user
     cur.execute(
         'SELECT * FROM "user" WHERE id = %s',
@@ -185,6 +181,9 @@ def searchID():
     diseases_str = ""
     for disease in diseases:
         diseases_str += disease[1] + ", "
+    if diseases_str != "":
+        diseases_str = diseases_str[:-2]
+    ##
 
     if person is None:
         return {"result": "Invalid ID"}
