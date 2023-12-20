@@ -144,8 +144,8 @@
   
       const infoTable = document.createElement('table');
       infoTable.className = 'searchResultsTable';
-  
-      for (const key in data) {
+      let keys = ['id', 'name', 'address', 'phone', 'email', 'dob', 'bloodtype', 'weight', 'type', 'disease'];
+      for (const key in keys) {
           const row = infoTable.insertRow();
           const cellKey = row.insertCell(0);
           const cellValue = row.insertCell(1);
