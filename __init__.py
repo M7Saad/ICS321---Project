@@ -216,7 +216,7 @@ def remove():
     Removes a user from the database
     data will include "id"
     """
-    tables = ["auth", "donor", "recipient", "disease_history", "user", "person"]
+    tables = ["auth", "donor", "recipient", "disease_history", '"user"', "person"]
     data = request.get_json()
     db = get_db()
     cur = db.cursor()
