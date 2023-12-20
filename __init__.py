@@ -89,7 +89,8 @@ def addUser():
     cur = db.cursor()
     # generate id by counting the number of rows in the table
     cur.execute("SELECT MAX(id) FROM person")
-    id = cur.fetchone()[0] + 1 if cur.fetchone()[0] is not None else 1
+    row = cur.fetchone()
+    id = row[0] + 1 if row and row[0] is not None else 1
 
     # insert the data into the person table
     cur.execute(
@@ -296,6 +297,60 @@ def getUsers():
             }
         )
     return {"result": ans}
+
+
+@app.route("/updateUser", methods=["POST"])
+def updateUser():
+    """
+    Updates a user in the database
+    data will include "id", "name","address", "email", "bloodtype", "weight", type = (either "Donor" or "Recipient"),
+    "disease" history which is in the format "disease1, disease2, ..."
+    """
+
+    # update person
+    data = request.get_json()
+    data = data.get("row")
+    print(data)
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "UPDATE person SET address = %s, email = %s WHERE id = %s",
+        (
+            data.get("address"),
+            data.get("email"),
+            data.get("id"),
+        ),
+    )
+
+    # update user
+    cur.execute(
+        'UPDATE "user" SET blood_type = %s, weight = %s WHERE id = %s',
+        (data.get("bloodtype"), data.get("weight"), data.get("id")),
+    )
+
+    # update auth
+    cur.execute(
+        "UPDATE auth SET role = %s WHERE id = %s",
+        (data.get("type"), data.get("id")),
+    )
+
+    # update disease
+    # remove all diseases
+    cur.execute(
+        "DELETE FROM disease_history WHERE id = %s",
+        (data.get("id"),),
+    )
+    # insert the new diseases
+    print(data)
+    if data.get("disease") != "":
+        diseases = data.get("disease").split(",")
+        for disease in diseases:
+            cur.execute(
+                "INSERT INTO disease_history VALUES (%s, %s)",
+                (data.get("id"), disease),
+            )
+
+    return {"result": "success"}
 
 
 # --------------------- html ---------------------#
