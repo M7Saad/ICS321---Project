@@ -43,6 +43,7 @@ tr:nth-child(odd){
                 <th>Type</th>
                 <th>BloodType</th>
                 <th>Address</th>
+                <th>Weight</th>
                 <th>Diseases</th>
                 <th>Action</th>
         </thead>
@@ -56,6 +57,7 @@ tr:nth-child(odd){
             "type": "Donor",
             "bloodType": "A+",
             "address": "Mekkah",
+            "weight": "70",
             "diseases": ""
         },{
             "id": "0070",
@@ -64,6 +66,7 @@ tr:nth-child(odd){
             "type": "Donor",
             "bloodType": "A+",
             "address": "Mekkah",
+            "weight": "69",
             "diseases": "cancer, aids, diabetes",
         },{
             "id": "0071",
@@ -72,11 +75,13 @@ tr:nth-child(odd){
             "type": "Recipient",
             "bloodType": "B-",
             "address": "Riyadh",
+            "weight": "80",
             "disease": "diabetes",
 
          }
         
     ];
+         
     
         var typeOptions = ['Donor', 'Recipient'];
         var bloodTypeOptions = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
@@ -87,7 +92,7 @@ tr:nth-child(odd){
                 var row = table.insertRow();
                 Object.entries(user).forEach(function([key, value], cellIndex) {
                     var cell = row.insertCell();
-                    if (key === 'id') {
+                    if (key === 'id' || key === 'name') {
                         cell.textContent = value;
                     } else if (key === 'type' || key === 'bloodType') {
                         var select = document.createElement('select');
