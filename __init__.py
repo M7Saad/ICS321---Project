@@ -353,6 +353,28 @@ def updateUser():
     return {"result": "success"}
 
 
+@app.route("/adddrive", methods=["post"])
+def addBloodDrive():
+    """
+    Adds a new blood drive to the database
+    data will include "start_date", "end_date", "location"
+    """
+    data = request.get_json()
+    db = get_db()
+    cur = db.cursor()
+    # generate id by counting the number of rows in the table
+    cur.execute("SELECT MAX(event_id) FROM event")
+    row = cur.fetchone()
+    id = row[0] + 1 if row and row[0] is not None else 1
+    pid = 1  # session["user_id"]
+    # insert the data into the blood_drive table
+    cur.execute(
+        "INSERT INTO event VALUES (%s, %s, %s, %s, %s)",
+        (data.get("stDate"), data.get("enDate"), data.get("loc"), id, pid),
+    )
+    return {"result": "success"}
+
+
 # --------------------- html ---------------------#
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
