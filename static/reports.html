@@ -44,7 +44,7 @@
             <th>Date</th>
             <th>Donor Name</th>
             <th>Blood Type</th>
-            <th>Quantity (ml)</th>
+            <th>Quantity </th>
         </thead>
         <tbody id="weekDonationsBody">
             <!-- Placeholder data, replace with actual data from your backend -->
@@ -58,7 +58,7 @@
             <th>Date</th>
             <th>Donor Name</th>
             <th>Blood Type</th>
-            <th>Quantity (ml)</th>
+            <th>Quantity </th>
         </thead>
         <tbody id="monthDonationsBody">
             <!-- Placeholder data, replace with actual data from your backend -->
@@ -70,7 +70,7 @@
     <table id="aggregatedAmount">
         <thead>
             <th>Blood Type</th>
-            <th>Total Quantity (ml)</th>
+            <th>Total Quantity </th>
         </thead>
         <tbody id="aggregatedAmountBody">
             <!-- Placeholder data, replace with actual data from your backend -->
@@ -83,7 +83,7 @@
         <thead>
             <th>Drive Name</th>
             <th>Date</th>
-            <th>Total Collected (ml)</th>
+            <th>Total Collected </th>
         </thead>
         <tbody id="collectionDrivesBody">
             <!-- Placeholder data, replace with actual data from your backend -->
@@ -116,13 +116,11 @@
         }
 
         function fetchCollectionDrives() {
-            // Replace this with your actual backend endpoint
-            // Example: fetch("/getCollectionDrives")
+
             return Promise.resolve({
                 result: [
                     { driveName: "Drive 1", date: "2023-03-15", totalCollected: 1200 },
                     { driveName: "Drive 2", date: "2023-03-20", totalCollected: 900 },
-                    // Add more data as needed
                 ],
             });
         }
