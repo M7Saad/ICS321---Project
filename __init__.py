@@ -89,7 +89,7 @@ def addUser():
     cur = db.cursor()
     # generate id by counting the number of rows in the table
     cur.execute("SELECT MAX(id) FROM person")
-    id = cur.fetchone()[0] + 1
+    id = cur.fetchone()[0] + 1 if cur.fetchone()[0] is not None else 1
 
     # insert the data into the person table
     cur.execute(
