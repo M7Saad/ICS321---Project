@@ -1,92 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Add Blood Drive</title>
-</head>
-<style>
-    body{
-        background: #444;
-        color: white;
+  </head>
+  <style>
+    body {
+      background: #444;
+      color: white;
     }
-    form{
-        text-align: center;
-        margin-top: 20px;
+    form {
+      text-align: center;
+      margin-top: 20px;
     }
-    input{
-        display: block;
-        margin: 10px;
+    input {
+      display: block;
+      margin: 10px;
     }
-    div{
-        margin: 10px;
-        display: inline-block;
+    div {
+      margin: 10px;
+      display: inline-block;
     }
-    input[type="submit"]{
-        height: 45px;
-        width: 10%;
-        margin-left: 45%;
-        background: lightblue;
-        border-radius: 10px;
-        transition: 0.3s;
+    input[type="submit"] {
+      height: 45px;
+      width: 10%;
+      margin-left: 45%;
+      background: lightblue;
+      border-radius: 10px;
+      transition: 0.3s;
     }
-    input[type="submit"]:hover{
-        background: #6eb4ea;
-        color: #fff;
-        cursor: pointer;
+    input[type="submit"]:hover {
+      background: #6eb4ea;
+      color: #fff;
+      cursor: pointer;
     }
-    input[type="date"], input[type="text"]{
-        width: 100%;
-        height: 30px;
-        border-width: 3px;
+    input[type="date"],
+    input[type="text"] {
+      width: 100%;
+      height: 30px;
+      border-width: 3px;
     }
-</style>
-<body>
+  </style>
+  <body>
     <!-- there is  start and end date -->
-    <form method="post">
-        <div>
+    <form>
+      <div>
         <label for="start">Start Date:</label>
-        <input type="date" id="start" name="start" >            
-        </div>
-        <div>
+        <input type="date" id="start" name="start" />
+      </div>
+      <div>
         <label for="end">End Date:</label>
-        <input type="date" id="end" name="end">
-        </div>
-        <div>
+        <input type="date" id="end" name="end" />
+      </div>
+      <div>
         <label for="location">Location:</label>
-        <input type="text" id="location" name="location" value="">            
-        </div>
+        <input type="text" id="location" name="location" value="" />
+      </div>
 
-        <input type="submit" value="Submit">
+      <input type="submit" value="Submit" id="submit" />
     </form>
     <script>
-        // send to BE
+      // send to BE
+
+      submit = document.getElementById("submit");
+
+      submit.addEventListener("click", () => {
         stDate = document.getElementById("start").value;
         enDate = document.getElementById("end").value;
         loc = document.getElementById("location").value;
-        submit = document.getElementById("submit");
-        submit.addEventListener("click", () => {
-            fetch("/addBloodDrive", {
-                method: "POST",
-                body: JSON.stringify({ stDate, enDate, loc }),
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((response) => response.json())
-                .then((result) => {
-                    console.log(result);
-                    if (result.result === "success") {
-                        alert("Blood Drive added successfully");
-                        window.location.href = "staff.html";
-                    } else {
-                        alert("Error adding Blood Drive");
-                    }
-                })
-                .catch((error) => {
-                    console.error("Error:", error);
-                });
-        });
+        console.log(JSON.stringify({ stDate, enDate, loc }));
+        fetch("/adddrive", {
+          method: "POST",
+          body: JSON.stringify({ stDate, enDate, loc }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((result) => {
+            console.log(result);
+            if (result.result === "success") {
+              alert("Blood Drive added successfully");
+            } else {
+              alert("Error adding Blood Drive");
+            }
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      });
     </script>
-</body>
+  </body>
 </html>
