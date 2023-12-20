@@ -214,39 +214,16 @@ def remove():
     Removes a user from the database
     data will include "id"
     """
+    tables = ["auth", "donor", "recipient", "disease_history", "user", "person"]
     data = request.get_json()
     db = get_db()
     cur = db.cursor()
     # remove from auth
-    cur.execute(
-        "DELETE FROM auth WHERE id = %s",
-        (data.get("id"),),
-    )
-    # remove from donor
-    cur.execute(
-        "DELETE FROM donor WHERE id = %s",
-        (data.get("id"),),
-    )
-    # remove from recipient
-    cur.execute(
-        "DELETE FROM recipient WHERE id = %s",
-        (data.get("id"),),
-    )
-    # remove from disease_history
-    cur.execute(
-        "DELETE FROM disease_history WHERE id = %s",
-        (data.get("id"),),
-    )
-    # remove from user
-    cur.execute(
-        'DELETE FROM "user" WHERE id = %s',
-        (data.get("id"),),
-    )
-    # remove from person
-    cur.execute(
-        "DELETE FROM person WHERE id = %s",
-        (data.get("id"),),
-    )
+    for table in tables:
+        cur.execute(
+            f"DELETE FROM {table} WHERE id = %s",
+            (data.get("id"),),
+        )
     return {"result": "success"}
 
 
