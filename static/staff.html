@@ -35,14 +35,21 @@
       color: #fff;
       cursor: pointer;
     }
+    .searchForm {
+        display: none;
+        text-align: center;
+        margin-top: 20px;
+    }
+    .searchForm input, .searchForm button {
+        margin: 10px;
+    }
   </style>
   <body>
     <h2>Welcome</h2>
     <h3>Available Options:</h3>
     <div class="buttonContainer">
       <button class="addBtn">Add Donor/Recipient</button>
-      <button class="DelBtn">Delete Donor/Recipient</button>
-      <button class="UpdBtn">Edit Donor/Recipient info</button>
+      <button class="UpdDelBtn">Edit Donor/Recipient info</button>
       <button class="SearchBtn">Search Donor/Recipient History</button>
       <button class="BloodReq">Process Blood Requests</button>
       <button class="driveBtn">Initiate Blood Collection Drive</button>
@@ -50,11 +57,15 @@
       <button class="notification">Send Notification</button>
       <button class="logOut">Log Out</button>
     </div>
+    <div class="searchForm">
+        <input type="text" id="searchId" placeholder="Enter ID">
+        <button id="submitSearch">Search</button>
+    </div>
 
     <script>
       const addBtn = document.querySelector(".addBtn");
       const DelBtn = document.querySelector(".DelBtn");
-      const UpdBtn = document.querySelector(".UpdBtn");
+      const UpdDelBtn = document.querySelector(".UpdDelBtn");
       const SearchBtn = document.querySelector(".SearchBtn");
       const BloodReq = document.querySelector(".BloodReq");
       const driveBtn = document.querySelector(".driveBtn");
@@ -65,15 +76,12 @@
       addBtn.addEventListener("click", () => {
         window.location.href = "addUser.html";
       });
-      DelBtn.addEventListener("click", () => {
-        window.location.href = "deleteUser.html";
+      UpdDelBtn.addEventListener("click", () => {
+        window.location.href = "Users.html";
       });
-      UpdBtn.addEventListener("click", () => {
-        window.location.href = "editUser.html";
-      });
-      SearchBtn.addEventListener("click", () => {
-        window.location.href = "searchUser.html";
-      });
+      //SearchBtn.addEventListener("click", () => {
+      //   window.location.href = "searchUser.html";
+      //});
       BloodReq.addEventListener("click", () => {
         window.location.href = "bloodRequest.html";
       });
@@ -89,6 +97,36 @@
       logOut.addEventListener("click", () => {
         window.location.href = "index.html";
       });
+      SearchBtn.addEventListener("click", () => {
+        document.querySelector('.searchForm').style.display = 'block';
+    });
+
+    // Add event listener for the submit search button
+    document.getElementById('submitSearch').addEventListener('click', () => {
+        var id = document.getElementById('searchId').value;
+        // Call function to send ID to backend
+        sendIdToBackend(id);
+    });
+
+    function sendIdToBackend(id) {
+        // Placeholder for backend call
+        console.log("Sending ID to backend:", id);
+        // Example of sending data to backend
+        fetch('backend-endpoint-url', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ id: id })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+    }
     </script>
   </body>
 </html>
