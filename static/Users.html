@@ -1,201 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>users</title>
-</head>
-<style>
-body{
-    background: #444;
-    color: white;
-}
-table{
-    border-collapse: collapse;
-    width: 100%;
-    color: #538175;
-    font-family: monospace;
-    font-size: 25px;
-    text-align: left;
-}
-th{
-    background-color: #588c7e;
-    color: white;
-}
-tr:nth-child(even){
-    background-color: #f2f2f2
-}
-tr:nth-child(odd){
-    background-color: #d0d0d0
-}
-/*make forms transparent*/
-
-</style>
-<body>
+  </head>
+  <style>
+    body {
+      background: #444;
+      color: white;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      color: #538175;
+      font-family: monospace;
+      font-size: 25px;
+      text-align: left;
+    }
+    th {
+      background-color: #588c7e;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(odd) {
+      background-color: #d0d0d0;
+    }
+    /*make forms transparent*/
+  </style>
+  <body>
     <h2>Users!</h2>
 
     <table>
-        <thead>
-            
-                <th>id</th>
-                <th>name</th>
-                <th>email</th>
-                <th>Type</th>
-                <th>BloodType</th>
-                <th>Address</th>
-                <th>Weight</th>
-                <th>Diseases</th>
-                <th>Action</th>
-        </thead>
+      <thead>
+        <th>id</th>
+        <th>name</th>
+        <th>email</th>
+        <th>Type</th>
+        <th>BloodType</th>
+        <th>Address</th>
+        <th>Weight</th>
+        <th>Diseases</th>
+        <th>Action</th>
+      </thead>
     </table>
     <script>
-        var jsonData = [
-        {
-            "id": "0069",
-            "name": "Hamza",
-            "email": "hamza69@gmail.com",
-            "type": "Donor",
-            "bloodType": "A+",
-            "address": "Mekkah",
-            "weight": "70",
-            "diseases": ""
-        },{
-            "id": "0070",
-            "name": "mohammed",
-            "email": "mo@m",
-            "type": "Donor",
-            "bloodType": "A+",
-            "address": "Mekkah",
-            "weight": "69",
-            "diseases": "cancer, aids, diabetes",
-        },{
-            "id": "0071",
-            "name": "ahmed",
-            "email": "ahmed@g",
-            "type": "Recipient",
-            "bloodType": "B-",
-            "address": "Riyadh",
-            "weight": "80",
-            "disease": "diabetes",
-
-         }
-        
-    ];
-         
-    
-        var typeOptions = ['Donor', 'Recipient'];
-        var bloodTypeOptions = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
-    
-        function populateTable() {
-            var table = document.querySelector('table');
-            jsonData.forEach(function(user, index) {
-                var row = table.insertRow();
-                Object.entries(user).forEach(function([key, value], cellIndex) {
-                    var cell = row.insertCell();
-                    if (key === 'id' || key === 'name') {
-                        cell.textContent = value;
-                    } else if (key === 'type' || key === 'bloodType') {
-                        var select = document.createElement('select');
-                        var options = key === 'type' ? typeOptions : bloodTypeOptions;
-                        options.forEach(function(optionValue) {
-                            var option = new Option(optionValue, optionValue, value === optionValue, value === optionValue);
-                            select.appendChild(option);
-                        });
-                        select.disabled = true;
-                        cell.appendChild(select);
-                    } else {
-                        var input = document.createElement('input');
-                        input.value = value;
-                        input.readOnly = true;
-                        cell.appendChild(input);
-                    }
-                });
-                var actionCell = row.insertCell();
-                actionCell.innerHTML = '<button class="edit-btn">Edit</button><button class="delete-btn">Delete</button>';
-            });
+      async function fetchData() {
+        try {
+          const response = await fetch("/getUsers");
+          const jsonData = await response.json();
+          populateTable(jsonData.result);
+        } catch (error) {
+          console.error("Error:", error);
         }
-    
-        document.querySelector('table').addEventListener('click', function(event) {
-            if (event.target.className === 'edit-btn') {
-                handleEdit(event);
-            } else if (event.target.className === 'delete-btn') {
-                handleDelete(event);
-            }
-        });
-    
-        function handleEdit(event) {
-            var row = event.target.parentNode.parentNode;
-            var inputs = row.querySelectorAll('input');
-            var selects = row.querySelectorAll('select');
-            var id = row.cells[0].textContent; // Get the ID from the first cell
-            if (event.target.textContent === 'Edit') {
-                inputs.forEach(input => input.readOnly = false);
-                selects.forEach(select => select.disabled = false);
-                event.target.textContent = 'Save';
+      }
+      var typeOptions = ["Donor", "Recipient"];
+      var bloodTypeOptions = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
+
+      function populateTable(jsonData) {
+        console.log(jsonData);
+        var table = document.querySelector("table");
+        jsonData.forEach(function (user, index) {
+          var row = table.insertRow();
+          Object.entries(user).forEach(function ([key, value], cellIndex) {
+            var cell = row.insertCell();
+            if (key === "id" || key === "name") {
+              cell.textContent = value;
+            } else if (key === "type" || key === "bloodType") {
+              var select = document.createElement("select");
+              var options = key === "type" ? typeOptions : bloodTypeOptions;
+              options.forEach(function (optionValue) {
+                var option = new Option(
+                  optionValue,
+                  optionValue,
+                  value === optionValue,
+                  value === optionValue
+                );
+                select.appendChild(option);
+              });
+              select.disabled = true;
+              cell.appendChild(select);
             } else {
-                // Prepare data to send to backend
-                var updatedData = { id: id };
-                inputs.forEach((input, index) => {
-                    if (!input.readOnly) { // Check if the input field was editable
-                        updatedData[input.getAttribute('name')] = input.value;
-                    }
-                });
-                selects.forEach(select => {
-                    if (!select.disabled) { // Check if the select was editable
-                        updatedData[select.getAttribute('name')] = select.value;
-                    }
-                });
-                
-                sendDataToUpdate('/update-user', updatedData);
-                // Make fields read-only again
-                inputs.forEach(input => input.readOnly = true);
-                selects.forEach(select => select.disabled = true);
-                event.target.textContent = 'Edit';
+              var input = document.createElement("input");
+              input.value = value;
+              input.readOnly = true;
+              cell.appendChild(input);
             }
-        }
-        
-        function sendDataToUpdate(url, data) {
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-        function handleDelete(event) {
-            var row = event.target.parentNode.parentNode;
-            var id = row.cells[0].textContent; // Get the ID from the first cell
-            sendDataToDelete('/delete-user', { id: id });
-            row.remove(); // Optionally remove the row from the table
-        }
-        function sendDataToDelete(url, data) {
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data)
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-        }
-    
-        populateTable();
-    </script>
-    
+          });
+          var actionCell = row.insertCell();
+          actionCell.innerHTML =
+            '<button class="edit-btn">Edit</button><button class="delete-btn">Delete</button>';
+        });
+      }
 
-</body>
+      document
+        .querySelector("table")
+        .addEventListener("click", function (event) {
+          if (event.target.className === "edit-btn") {
+            handleEdit(event);
+          } else if (event.target.className === "delete-btn") {
+            handleDelete(event);
+          }
+        });
+
+      function handleEdit(event) {
+        var row = event.target.parentNode.parentNode;
+        var inputs = row.querySelectorAll("input");
+        var selects = row.querySelectorAll("select");
+        var id = row.cells[0].textContent; // Get the ID from the first cell
+        if (event.target.textContent === "Edit") {
+          inputs.forEach((input) => (input.readOnly = false));
+          selects.forEach((select) => (select.disabled = false));
+          event.target.textContent = "Save";
+        } else {
+          // Prepare data to send to backend
+          var updatedData = { id: id };
+          inputs.forEach((input, index) => {
+            if (!input.readOnly) {
+              // Check if the input field was editable
+              updatedData[input.getAttribute("name")] = input.value;
+            }
+          });
+          selects.forEach((select) => {
+            if (!select.disabled) {
+              // Check if the select was editable
+              updatedData[select.getAttribute("name")] = select.value;
+            }
+          });
+
+          sendDataToUpdate("/update-user", updatedData);
+          // Make fields read-only again
+          inputs.forEach((input) => (input.readOnly = true));
+          selects.forEach((select) => (select.disabled = true));
+          event.target.textContent = "Edit";
+        }
+      }
+
+      function sendDataToUpdate(url, data) {
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+      function handleDelete(event) {
+        var row = event.target.parentNode.parentNode;
+        var id = row.cells[0].textContent; // Get the ID from the first cell
+        sendDataToDelete("/delete-user", { id: id });
+        row.remove(); // Optionally remove the row from the table
+      }
+      function sendDataToDelete(url, data) {
+        fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      fetchData();
+    </script>
+  </body>
 </html>

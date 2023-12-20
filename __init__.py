@@ -188,6 +188,9 @@ def searchID():
         diseases_str = diseases_str[:-2]
     ##
 
+    # keep the date of birth, without the time
+    DOB = person[5].strftime("%Y-%m-%d")
+
     return {
         "result": {
             # from person
@@ -196,7 +199,7 @@ def searchID():
             "address": person[2],
             "phone": person[3],
             "email": person[4],
-            "dob": person[5],
+            "dob": DOB,
             # type
             "type": type,
             # from user
@@ -229,62 +232,70 @@ def remove():
 @app.route("/getUsers", methods=["get"])
 def getUsers():
     """
-    Returns all users in the database
+    Returns all users in the database (id, name, address, email, type, bloodtype, weight, disease)
     """
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "SELECT * FROM person",
+        "SELECT ID FROM person",
     )
     users = cur.fetchall()
+    ans = []
     # for each user get the type, bloodtype, weight, disease
     for i in range(len(users)):
+        print(users[i][0], "!!!")
+        ID = users[i][0]
+        cur.execute(
+            "SELECT * FROM person WHERE id = %s",
+            (ID,),
+        )
+        person = cur.fetchone()
+
         # get type of user
         cur.execute(
-            "SELECT * FROM donor WHERE id = %s",
-            (users[i][0],),
+            "SELECT role FROM auth WHERE id = %s",
+            (ID,),
         )
-        donor = cur.fetchone()
-        if donor is None:
-            type = "recipient"
-        else:
-            type = "donor"
+        type = cur.fetchone()[0]
         # get the user
         cur.execute(
             'SELECT * FROM "user" WHERE id = %s',
-            (users[i][0],),
+            (ID,),
         )
         user = cur.fetchone()
         # get the diseases
         cur.execute(
             "SELECT * FROM disease_history WHERE id = %s",
-            (users[i][0],),
+            (ID,),
         )
         diseases = cur.fetchall()
         # convert the diseases to a string
         diseases_str = ""
         for disease in diseases:
             diseases_str += disease[1] + ", "
+        if diseases_str != "":
+            diseases_str = diseases_str[:-2]
+        ##
 
         # keep the date of birth, without the time
+        DOB = person[5].strftime("%Y-%m-%d")
 
-        users[i] = {
-            # from person
-            "id": users[i][0],
-            "name": users[i][1],
-            "address": users[i][2],
-            "phone": users[i][3],
-            "email": users[i][4],
-            "dob": users[i][5],
-            # type
-            "type": type,
-            # from user
-            "bloodtype": user[1],
-            "weight": user[2],
-            "disease": diseases_str,
-        }
-
-    return {"result": users}
+        ans.append(
+            {
+                # from person
+                "id": person[0],
+                "name": person[1],
+                "address": person[2],
+                "email": person[4],
+                # type
+                "type": type,
+                # from user
+                "bloodtype": user[1],
+                "weight": user[2],
+                "disease": diseases_str,
+            }
+        )
+    return {"result": ans}
 
 
 # --------------------- html ---------------------#
