@@ -551,26 +551,53 @@ def getBloodTypeReport():
 # where events.eventID = Donations.eventID and Donations.donor_id = users.id
 # group by eventID, blood_type
     
-        ID = session["user_id"]
-        db = get_db()
-        cur = db.cursor()
-        cur.execute(
-            "select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users where events.eventID = Donations.eventID and Donations.donor_id = users.id group by eventID, blood_type",
+    ID = session["user_id"]
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users where events.eventID = Donations.eventID and Donations.donor_id = users.id group by eventID, blood_type",
+    )
+    events = cur.fetchall()
+    ans = []
+    for event in events:
+        ans.append(
+            {
+                "eventID": event[0],
+                "startDate": event[1].strftime("%Y-%m-%d"),
+                "endDate": event[2].strftime("%Y-%m-%d"),
+                "blood_type": event[3],
+                "amount": event[4],
+            }
         )
-        events = cur.fetchall()
-        ans = []
-        for event in events:
-            ans.append(
-                {
-                    "eventID": event[0],
-                    "startDate": event[1].strftime("%Y-%m-%d"),
-                    "endDate": event[2].strftime("%Y-%m-%d"),
-                    "blood_type": event[3],
-                    "amount": event[4],
-                }
-            )
-        # get
-        return {"result": ans}
+    # get
+    return {"result": ans}
+
+@app.route("/getReport3", methods=["get"])
+def getWeeklyReport():
+# query to get the total donations per week
+# select * from Donations
+# where startDate < current_date and startDate > current_date - 7
+    ID = session["user_id"]
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "select * from Donations where startDate < current_date and startDate > current_date - 7",
+    )
+    events = cur.fetchall()
+    ans = []
+    for event in events:
+        ans.append(
+            {
+                "donation_id": event[0],
+                "donor_id": event[1],
+                "eventID": event[2],
+                "amount": event[3],
+                "startDate": event[4].strftime("%Y-%m-%d"),
+            }
+        )
+    # get
+    return {"result": ans}
+
 
 ###################################################################################################
 
