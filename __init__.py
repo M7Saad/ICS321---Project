@@ -145,6 +145,70 @@ def addUser():
     return {"result": "success"}
 
 
+@app.route("/searchID", methods=["POST", "GET"])
+def searchID():
+    """
+    Searches for a user by id
+    data will include "id"
+    """
+    #data = request.get_json()
+    data = {"id": 10}
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "SELECT * FROM person WHERE id = %s",
+        (data.get("id"),),
+    )
+    person = cur.fetchone()
+    # get type of user
+    cur.execute(
+        "SELECT * FROM donor WHERE id = %s",
+        (data.get("id"),),
+    )
+    donor = cur.fetchone()
+    if donor is None:
+        type = "recipient"
+    else:
+        type = "donor"
+    # get the user
+    cur.execute(
+        'SELECT * FROM "user" WHERE id = %s',
+        (data.get("id"),),
+    )
+    user = cur.fetchone()
+    # get the diseases
+    cur.execute(
+        "SELECT * FROM disease_history WHERE id = %s",
+        (data.get("id"),),
+    )
+    diseases = cur.fetchall()
+    # convert the diseases to a string
+    diseases_str = ""
+    for disease in diseases:
+        diseases_str += disease[1] + ", "
+    print(person, user, diseases_str, type)
+    if user is None:
+        return {"result": "Invalid ID"}
+    else:
+        return {
+            "result": {
+                # from person
+                "id": person[0],
+                "name": person[1],
+                "address": person[2],
+                "phone": person[3],
+                "email": person[4],
+                "dob": person[5],
+                # type
+                "type": type,
+                # from user
+                "bloodtype": user[1],
+                "weight": user[2],
+                "disease": diseases_str,
+            }
+        }
+
+
 # --------------------- html ---------------------#
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
