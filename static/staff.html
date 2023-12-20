@@ -140,6 +140,10 @@
       }
 
       function displaySearchResults(data) {
+        if (data.length === 0) {
+          alert("Error: User not found");
+          return;
+        }
         const resultsDiv = document.getElementById("searchResults");
         resultsDiv.innerHTML = ""; // Clear previous results
         console.log(data);
