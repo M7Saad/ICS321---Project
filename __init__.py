@@ -366,7 +366,7 @@ def addBloodDrive():
     cur.execute("SELECT MAX(event_id) FROM event")
     row = cur.fetchone()
     id = row[0] + 1 if row and row[0] is not None else 1
-    pid = 1  # session["user_id"]
+    pid = session["user_id"]
     # insert the data into the blood_drive table
     cur.execute(
         "INSERT INTO event VALUES (%s, %s, %s, %s, %s)",
