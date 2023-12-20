@@ -79,9 +79,7 @@
       UpdDelBtn.addEventListener("click", () => {
         window.location.href = "Users.html";
       });
-      //SearchBtn.addEventListener("click", () => {
-      //   window.location.href = "searchUser.html";
-      //});
+
       BloodReq.addEventListener("click", () => {
         window.location.href = "bloodRequest.html";
       });
@@ -121,9 +119,10 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log('Success:', data);
-        })
-        .catch((error) => {
+              console.log('Success:', data);
+              // Display the data on the page
+              document.getElementById('result').innerHTML = data;
+            })            .catch((error) => {
             console.error('Error:', error);
         });
     }
