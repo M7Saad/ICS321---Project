@@ -186,7 +186,7 @@ def searchID():
     ##
 
     if person is None:
-        return {"result": "Invalid ID"}
+        return {}
     else:
         return {
             "result": {

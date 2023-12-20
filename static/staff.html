@@ -40,7 +40,8 @@
       text-align: center;
       margin-top: 20px;
     }
-    .searchForm input, .searchForm button {
+    .searchForm input,
+    .searchForm button {
       margin: 10px;
     }
     .searchResultsTable {
@@ -67,8 +68,8 @@
       <button class="logOut">Log Out</button>
     </div>
     <div class="searchForm">
-        <input type="text" id="searchId" placeholder="Enter ID">
-        <button id="submitSearch">Search</button>
+      <input type="text" id="searchId" placeholder="Enter ID" />
+      <button id="submitSearch">Search</button>
     </div>
     <div id="searchResults"></div>
 
@@ -106,55 +107,66 @@
         window.location.href = "index.html";
       });
       SearchBtn.addEventListener("click", () => {
-        document.querySelector('.searchForm').style.display = 'block';
-    });
+        document.querySelector(".searchForm").style.display = "block";
+      });
 
-    // Add event listener for the submit search button
-    document.getElementById('submitSearch').addEventListener('click', () => {
-        var id = document.getElementById('searchId').value;
+      // Add event listener for the submit search button
+      document.getElementById("submitSearch").addEventListener("click", () => {
+        var id = document.getElementById("searchId").value;
         // Call function to send ID to backend
         sendIdToBackend(id);
-    });
+      });
 
-    function sendIdToBackend(id) {
-      // Placeholder for backend call
-      console.log("Sending ID to backend:", id);
-      // Example of sending data to backend
-      fetch("/searchID", {
-          method: 'POST',
+      function sendIdToBackend(id) {
+        // Placeholder for backend call
+        console.log("Sending ID to backend:", id);
+        // Example of sending data to backend
+        fetch("/searchID", {
+          method: "POST",
           headers: {
-              'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id: id })
-      })
-      .then(response => response.json())
-      .then(data => {
-            console.log('Success:', data);
+          body: JSON.stringify({ id: id }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
             // Format and display the data on the page
             displaySearchResults(data.result);
           })
-      .catch((error) => {
-          console.error('Error:', error);
-      });
-  }
-  
-  function displaySearchResults(data) {
-      const resultsDiv = document.getElementById('searchResults');
-      resultsDiv.innerHTML = ''; // Clear previous results
-  
-      const infoTable = document.createElement('table');
-      infoTable.className = 'searchResultsTable';
-      let keys = ['id', 'name', 'address', 'phone', 'email', 'dob', 'bloodtype', 'weight', 'type', 'disease'];
-      for (const key in keys) {
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+
+      function displaySearchResults(data) {
+        const resultsDiv = document.getElementById("searchResults");
+        resultsDiv.innerHTML = ""; // Clear previous results
+        console.log(data);
+        const infoTable = document.createElement("table");
+        infoTable.className = "searchResultsTable";
+        const keys = [
+          "id",
+          "name",
+          "address",
+          "phone",
+          "email",
+          "dob",
+          "bloodtype",
+          "weight",
+          "type",
+          "disease",
+        ];
+        for (let key of keys) {
           const row = infoTable.insertRow();
           const cellKey = row.insertCell(0);
           const cellValue = row.insertCell(1);
           cellKey.innerHTML = `<strong>${key}</strong>`;
           cellValue.innerHTML = data[key];
+        }
+
+        resultsDiv.appendChild(infoTable);
       }
-  
-      resultsDiv.appendChild(infoTable);
-    }  
     </script>
   </body>
 </html>
