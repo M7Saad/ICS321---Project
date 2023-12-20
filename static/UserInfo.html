@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>info</title>
+</head>
+<body>
+    <form action="">
+        <div>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="">
+        </div>
+        <div>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" value="">
+        </div>
+        <div>
+            <label for="phone">Phone:</label>
+            <input type="text" id="phone" name="phone" value="">
+        </div>
+        <div>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" value="">
+        </div>
+        <div>
+            <label for="bloodType">Blood Type:</label>
+            <select name="bloodType" id="bloodType">
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>                
+            </select>
+        </div>
+        <div>
+            <label for="weight">Weight:</label>
+            <input type="text" id="weight" name="weight" value="">
+        </div>
+        <div>
+            <label for="diseases">Diseases:</label>
+            <input type="text" id="diseases" name="diseases" value="">
+        </div>
+        <div>
+            <label for="password">Password:</label>
+            <input type="text" id="password" name="password" value="">
+
+        </div>
+        <div>
+            <label for="type">Type:</label>
+            <select name="type" id="type">
+                <option value="donor">Donor</option>
+                <option value="recipient">Recipient</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" value="Submit">
+        </div>
+    </form>
+    <script>
+        const API_URL = 'http://localhost:3000/xxxxxxxxxx'; // حط الرابط اللي تبي تجيب منه الاي بي اي
+        
+
+
+        function getUserInfo() {
+            fetch(API_URL) //حط الرابط اللي تبي تجيب منه الاي بي اي
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('name').value = data.name;
+                    document.getElementById('email').value = data.email;
+                    document.getElementById('phone').value = data.phone;
+                    document.getElementById('address').value = data.address;
+                    document.getElementById('bloodType').value = data.bloodType;
+                    document.getElementById('weight').value = data.weight;
+                    document.getElementById('diseases').value = data.diseases;
+                    document.getElementById('password').value = data.password;
+                    document.getElementById('type').value = data.type;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function updateUserInfo() {
+            var updatedAddress = document.getElementById('address').value;
+            var updatedDiseases = document.getElementById('diseases').value;
+            var updatedWeight = document.getElementById('weight').value;
+
+            fetch(API_URL, { // حتى هنا غير الرابط
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    address: updatedAddress,
+                    diseases: updatedDiseases,
+                    weight: updatedWeight
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        getUserInfo();
+
+        document.querySelector('form').addEventListener('submit', function (event) {
+            event.preventDefault();
+            updateUserInfo();
+        });
+    </script>
+</body>
+</html>
