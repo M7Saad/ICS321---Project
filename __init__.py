@@ -507,6 +507,73 @@ def getHistory():
     return {"result": ans}
 
 
+
+
+
+
+
+
+
+##########################################################################################
+@app.route("/getReport", methods=["get"])
+def getEventReport():
+    
+# query to get the total donations per event
+# select eventID,startDate, endDate, sum(amount) from events, Donations
+# where events.eventID = Donations.eventID
+# group by eventID
+
+    ID = session["user_id"]
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "SELECT eventID,startDate, endDate, sum(amount) from events, Donations where events.eventID = Donations.eventID group by eventID",
+    )
+    events = cur.fetchall()
+    ans = []
+    for event in events:
+        ans.append(
+            {
+                "eventID": event[0],
+                "startDate": event[1].strftime("%Y-%m-%d"),
+                "endDate": event[2].strftime("%Y-%m-%d"),
+                "amount": event[3],
+            }
+        )
+    # get
+    return {"result": ans}
+
+
+@app.route("/getReport2", methods=["get"])
+def getBloodTypeReport():
+# query to get the total donations per event per blood type
+# select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users
+# where events.eventID = Donations.eventID and Donations.donor_id = users.id
+# group by eventID, blood_type
+    
+        ID = session["user_id"]
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(
+            "select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users where events.eventID = Donations.eventID and Donations.donor_id = users.id group by eventID, blood_type",
+        )
+        events = cur.fetchall()
+        ans = []
+        for event in events:
+            ans.append(
+                {
+                    "eventID": event[0],
+                    "startDate": event[1].strftime("%Y-%m-%d"),
+                    "endDate": event[2].strftime("%Y-%m-%d"),
+                    "blood_type": event[3],
+                    "amount": event[4],
+                }
+            )
+        # get
+        return {"result": ans}
+
+###################################################################################################
+
 # --------------------- html ---------------------#
 @app.route("/", defaults={"path": "index.html"})
 @app.route("/<path:path>")
