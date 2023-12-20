@@ -1,0 +1,47 @@
+## gets all donations withen the past or next week
+
+select * from Donation 
+where date < '2023-12-17' 
+and date > '2023-12-3'
+
+###############
+
+select date, name, blood_type, quantity from Donations, Donors, person
+where Donations.donor_id = Donors.donor_id
+and Donors.id = person.person_id
+and date < '2023-12-17'
+and date > '2023-12-3'
+order by date
+
+
+############### blood donations recieved in a month 
+
+select date, name, blood_type, quantity from Donations, Donors, person
+where Donations.donor_id = Donors.donor_id
+and Donors.id = person.person_id
+and date < '2024-01-10'
+and date > '2023-11-10'
+order by date
+
+
+
+################ Aggregated Amount Available for Each Blood Type
+
+select blood_type, sum(quantity) from Donations, Donors, person
+where Donations.donor_id = Donors.donor_id
+and Donors.id = person.person_id
+group by blood_type
+
+
+################ Collection Drives and Total Blood Collected During Each Drive
+
+select eventID,startDate, endDate, sum(amount) from events, Donations
+where events.eventID = Donations.eventID
+group by eventID
+
+
+
+
+
+
+

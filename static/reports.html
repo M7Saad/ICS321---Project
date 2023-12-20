@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Donations Report</title>
+    <style>
+        body {
+            background: #444;
+            color: white;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            color: #538175;
+            font-family: monospace;
+            font-size: 25px;
+            text-align: left;
+            margin-bottom: 30px;
+        }
+
+        th {
+            background-color: #588c7e;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Blood Donations Report</h2>
+
+    <!-- Blood Donations Received in a Week -->
+    <h3>1. Blood Donations Received in a Week</h3>
+    <table id="weekDonations">
+        <thead>
+            <th>Date</th>
+            <th>Donor Name</th>
+            <th>Blood Type</th>
+            <th>Quantity </th>
+        </thead>
+        <tbody id="weekDonationsBody">
+            <!-- Placeholder data, replace with actual data from your backend -->
+        </tbody>
+    </table>
+
+    <!-- Blood Donations Received in a Month -->
+    <h3>2. Blood Donations Received in a Month</h3>
+    <table id="monthDonations">
+        <thead>
+            <th>Date</th>
+            <th>Donor Name</th>
+            <th>Blood Type</th>
+            <th>Quantity </th>
+        </thead>
+        <tbody id="monthDonationsBody">
+            <!-- Placeholder data, replace with actual data from your backend -->
+        </tbody>
+    </table>
+
+    <!-- Aggregated Amount for Each Blood Type -->
+    <h3>3. Aggregated Amount Available for Each Blood Type</h3>
+    <table id="aggregatedAmount">
+        <thead>
+            <th>Blood Type</th>
+            <th>Total Quantity </th>
+        </thead>
+        <tbody id="aggregatedAmountBody">
+            <!-- Placeholder data, replace with actual data from your backend -->
+        </tbody>
+    </table>
+
+    <!-- Collection Drives and Total Blood Collected During Each Drive -->
+    <h3>4. Collection Drives and Total Blood Collected During Each Drive</h3>
+    <table id="collectionDrives">
+        <thead>
+            <th>Drive Name</th>
+            <th>Date</th>
+            <th>Total Collected </th>
+        </thead>
+        <tbody id="collectionDrivesBody">
+            <!-- Placeholder data, replace with actual data from your backend -->
+        </tbody>
+    </table>
+
+    <h3>5. All Payments Confirmed as Completed</h3>
+    <table id="completedPayments">
+        <thead>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Status</th>
+        </thead>
+        <tbody id="completedPaymentsBody">
+            <!-- Placeholder data, replace with actual data from your backend -->
+        </tbody>
+    </table>
+    
+    <script>
+        function fetchAggregatedAmount() {
+            // Replace this with your actual backend endpoint
+            // Example: fetch("/getAggregatedAmount")
+            return Promise.resolve({
+                result: [
+                    { bloodType: "A+", totalQuantity: 1500 },
+                    { bloodType: "B-", totalQuantity: 800 },
+                    // Add more data as needed
+                ],
+            });
+        }
+
+        function fetchCollectionDrives() {
+
+            return Promise.resolve({
+                result: [
+                    { driveName: "Drive 1", date: "2023-03-15", totalCollected: 1200 },
+                    { driveName: "Drive 2", date: "2023-03-20", totalCollected: 900 },
+                ],
+            });
+        }
+
+        async function populateTable(tableId, fetchDataFunction) {
+            try {
+                const response = await fetchDataFunction();
+                const jsonData = response.result;
+                const tableBody = document.querySelector(`#${tableId}Body`);
+
+                jsonData.forEach(function (data) {
+                    const row = tableBody.insertRow();
+                    const columns = Object.keys(data);
+
+                    columns.forEach(function (key) {
+                        const cell = row.insertCell();
+                        cell.textContent = data[key];
+                    });
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        function fetchCompletedPayments() {
+            // Replace this with your actual backend endpoint
+            // Example: fetch("/getCompletedPayments")
+            return Promise.resolve({
+                result: [
+                    { date: "2023-04-01", amount: "$50.00", status: "Completed" },
+                    { date: "2023-04-05", amount: "$30.00", status: "Completed" },
+                    // Add more data as needed
+                ],
+            });
+        }
+
+        async function populateTable(tableId, fetchDataFunction) {
+            try {
+                const response = await fetchDataFunction();
+                const jsonData = response.result;
+                const tableBody = document.querySelector(`#${tableId}Body`);
+
+                jsonData.forEach(function (data) {
+                    const row = tableBody.insertRow();
+                    const columns = Object.keys(data);
+
+                    columns.forEach(function (key) {
+                        const cell = row.insertCell();
+                        cell.textContent = data[key];
+                    });
+                });
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        }
+
+        populateTable("weekDonations", fetchWeekDonations);
+        populateTable("monthDonations", fetchMonthDonations);
+        populateTable("aggregatedAmount", fetchAggregatedAmount);
+        populateTable("collectionDrives", fetchCollectionDrives);
+        populateTable("completedPayments", fetchCompletedPayments);
+    </script>
+</body>
+</html>
