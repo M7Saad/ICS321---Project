@@ -48,7 +48,7 @@ def validate():
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "SELECT * FROM auth WHERE username = %s",
+        "SELECT * FROM auth WHERE email = %s",
         (username,),
     )
     # if the user is not found or the password is incorrect return an error Message
@@ -373,6 +373,138 @@ def addBloodDrive():
         (data.get("stDate"), data.get("enDate"), data.get("loc"), id, pid),
     )
     return {"result": "success"}
+
+
+@app.route("/getUserinfo", methods=["get"])
+def getuserinfo():
+    ID = session["user_id"]
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "SELECT * FROM person WHERE id = %s",
+        (ID,),
+    )
+    person = cur.fetchone()
+
+    # get type of user
+    cur.execute(
+        "SELECT role FROM auth WHERE id = %s",
+        (ID,),
+    )
+    type = cur.fetchone()[0]
+    # get the user
+    cur.execute(
+        'SELECT * FROM "user" WHERE id = %s',
+        (ID,),
+    )
+    user = cur.fetchone()
+    # get the diseases
+    cur.execute(
+        "SELECT * FROM disease_history WHERE id = %s",
+        (ID,),
+    )
+    diseases = cur.fetchall()
+    # convert the diseases to a string
+    diseases_str = ""
+    for disease in diseases:
+        diseases_str += disease[1] + ", "
+    if diseases_str != "":
+        diseases_str = diseases_str[:-2]
+    ##
+
+    # keep the date of birth, without the time
+    DOB = person[5].strftime("%Y-%m-%d")
+
+    return {
+        # from person
+        "id": person[0],
+        "name": person[1],
+        "address": person[2],
+        "email": person[4],
+        # type
+        "type": type,
+        # from user
+        "weight": user[2],
+        "disease": diseases_str,
+    }
+
+
+@app.route("/updateUserinfo", methods=["POST"])
+def updateUserinfo():
+    """
+    Updates a user in the database
+    data will include "id", "name","address", "email", "bloodtype", "weight", type = (either "Donor" or "Recipient"),
+    "disease" history which is in the format "disease1, disease2, ..."
+    """
+
+    # update person
+    data = request.get_json()
+    data["id"] = session["user_id"]
+    data = data.get("data")
+    print(data)
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "UPDATE person SET address = %s, email = %s WHERE id = %s",
+        (
+            data.get("address"),
+            data.get("email"),
+            data.get("id"),
+        ),
+    )
+
+    # update user
+    cur.execute(
+        'UPDATE "user" SET weight = %s WHERE id = %s',
+        (data.get("weight"), data.get("id")),
+    )
+
+    # update auth
+    cur.execute(
+        "UPDATE auth SET role = %s WHERE id = %s",
+        (data.get("type"), data.get("id")),
+    )
+
+    # update disease
+    # remove all diseases
+    cur.execute(
+        "DELETE FROM disease_history WHERE id = %s",
+        (data.get("id"),),
+    )
+    # insert the new diseases
+    print(data)
+    if data.get("disease") != "":
+        diseases = data.get("disease").split(",")
+        for disease in diseases:
+            cur.execute(
+                "INSERT INTO disease_history VALUES (%s, %s)",
+                (data.get("id"), disease),
+            )
+
+    return {"result": "success"}
+
+
+@app.route("/getHistory", methods=["get"])
+def getHistory():
+    ID = session["user_id"]
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "SELECT * FROM DONATION WHERE donor_id = %s",
+        (ID,),
+    )
+    events = cur.fetchall()
+    ans = []
+    for event in events:
+        ans.append(
+            {
+                "donation_id": event[0],
+                "units": event[1],
+                "date": event[2].strftime("%Y-%m-%d"),
+            }
+        )
+    # get 
+    return {"result": ans}
 
 
 # --------------------- html ---------------------#
