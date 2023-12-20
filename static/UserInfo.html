@@ -53,6 +53,10 @@
 <body>
     <form action="">
         <div>
+            <label for="id">Id</label>
+            <input type="text" id="id" name="id" value="">
+        </div>
+        <div>
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" value="">
         </div>
@@ -108,12 +112,25 @@
     <script>
         const API_URL = 'http://localhost:3000/xxxxxxxxxx'; // حط الرابط اللي تبي تجيب منه الاي بي اي
         
-
+         // [email, weight, diseases, address] the only that can be changed 
 
         function getUserInfo() {
-            fetch(API_URL) //حط الرابط اللي تبي تجيب منه الاي بي اي
+            fetch(API_URL)                 //حط الرابط اللي تبي تجيب منه الاي بي اي
                 .then(response => response.json())
                 .then(data => {
+                    //data = {
+                     //   id: 1,
+                      //  name: "asdasd",
+                       // email: "sas@xs.c",
+                       // phone: "052343",
+                        //address: "my address",
+                        //bloodType: "B+",
+                       // weight: "68",
+                       // diseases: "cancer, ",
+                       // password: "123",
+                       // type: "donor"
+                  //  }
+                    document.getElementById('id').value = data.id;
                     document.getElementById('name').value = data.name;
                     document.getElementById('email').value = data.email;
                     document.getElementById('phone').value = data.phone;
@@ -121,14 +138,16 @@
                     document.getElementById('bloodType').value = data.bloodType;
                     document.getElementById('weight').value = data.weight;
                     document.getElementById('diseases').value = data.diseases;
-                    document.getElementById('password').value = data.password;
+                    document.getElementById('password').value = data.password
                     document.getElementById('type').value = data.type;
-                    document.getElementById('name').setAttribute('readonly', true);
-                    document.getElementById('email').setAttribute('readonly', true);
-                    document.getElementById('phone').setAttribute('readonly', true);
-                    document.getElementById('bloodType').setAttribute('readonly', true);
-                    document.getElementById('password').setAttribute('readonly', true);
-                    document.getElementById('type').setAttribute('readonly', true);
+                    // prevent user from changing anything other than [email, weight, diseases, address]
+                    document.getElementById('id').disabled = true;
+                    document.getElementById('name').disabled = true;
+                    document.getElementById('phone').disabled = true;
+                    document.getElementById('bloodType').disabled = true;
+                    document.getElementById('password').disabled = true;
+                    document.getElementById('type').disabled = true;
+
 
                 })
                 .catch(error => {
