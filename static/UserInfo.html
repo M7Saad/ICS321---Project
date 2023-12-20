@@ -5,6 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>info</title>
 </head>
+
+<style>
+    body {
+        background: #444;
+        color: white;
+    }
+
+    form {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    input {
+        display: block;
+        margin: 10px;
+    }
+
+    div {
+        margin: 10px;
+        display: inline-block;
+    }
+
+    input[type="submit"] {
+        height: 45px;
+        width: 120%;
+        margin-left: 45%;
+        background: lightblue;
+        border-radius: 10px;
+        transition: 0.3s;
+    }
+
+    input[type="submit"]:hover {
+        background: #6eb4ea;
+        color: #fff;
+        cursor: pointer;
+    }
+
+    input[type="date"],
+    input[type="text"] {
+        width: 100%;
+        height: 30px;
+        border-width: 3px;
+    }
+</style>
+
 <body>
     <form action="">
         <div>
@@ -78,6 +123,13 @@
                     document.getElementById('diseases').value = data.diseases;
                     document.getElementById('password').value = data.password;
                     document.getElementById('type').value = data.type;
+                    document.getElementById('name').setAttribute('readonly', true);
+                    document.getElementById('email').setAttribute('readonly', true);
+                    document.getElementById('phone').setAttribute('readonly', true);
+                    document.getElementById('bloodType').setAttribute('readonly', true);
+                    document.getElementById('password').setAttribute('readonly', true);
+                    document.getElementById('type').setAttribute('readonly', true);
+
                 })
                 .catch(error => {
                     console.error('Error:', error);
