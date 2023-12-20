@@ -140,12 +140,13 @@
       }
 
       function displaySearchResults(data) {
+        const resultsDiv = document.getElementById("searchResults");
+        resultsDiv.innerHTML = "";
         if (data.length === 0) {
           alert("Error: User not found");
           return;
         }
-        const resultsDiv = document.getElementById("searchResults");
-        resultsDiv.innerHTML = ""; // Clear previous results
+         
         console.log(data);
         const infoTable = document.createElement("table");
         infoTable.className = "searchResultsTable";
