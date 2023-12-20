@@ -503,31 +503,23 @@ def getHistory():
                 "date": event[2].strftime("%Y-%m-%d"),
             }
         )
-    # get 
+    # get
     return {"result": ans}
-
-
-
-
-
-
-
 
 
 ##########################################################################################
 @app.route("/getReport", methods=["get"])
 def getEventReport():
-    
-# query to get the total donations per event
-# select eventID,startDate, endDate, sum(amount) from events, Donations
-# where events.eventID = Donations.eventID
-# group by eventID
+    # query to get the total donations per event
+    # select eventID,startDate, endDate, sum(amount) from events, Donations
+    # where events.eventID = Donations.eventID
+    # group by eventID
 
     ID = session["user_id"]
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "SELECT eventID,startDate, endDate, sum(amount) from events, Donations where events.eventID = Donations.eventID group by eventID",
+        "SELECT event.event_ID ,event.start_date, event.end_date, sum(Donation.units) from event, Donation where event.event_id = donation.event_id group by event.event_id",
     )
     events = cur.fetchall()
     ans = []
@@ -546,16 +538,16 @@ def getEventReport():
 
 @app.route("/getReport2", methods=["get"])
 def getBloodTypeReport():
-# query to get the total donations per event per blood type
-# select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users
-# where events.eventID = Donations.eventID and Donations.donor_id = users.id
-# group by eventID, blood_type
-    
+    # query to get the total donations per event per blood type
+    # select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users
+    # where events.eventID = Donations.eventID and Donations.donor_id = users.id
+    # group by eventID, blood_type
+
     ID = session["user_id"]
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "select eventID,startDate, endDate, blood_type, sum(amount) from events, Donations, users where events.eventID = Donations.eventID and Donations.donor_id = users.id group by eventID, blood_type",
+        "SELECT event.event_ID ,event.start_date, event.end_date, sum(Donation.units) from event, Donation where event.event_id = donation.event_id group by event.event_id",
     )
     events = cur.fetchall()
     ans = []
@@ -572,11 +564,12 @@ def getBloodTypeReport():
     # get
     return {"result": ans}
 
+
 @app.route("/getReport3", methods=["get"])
 def getWeeklyReport():
-# query to get the total donations per week
-# select * from Donations
-# where startDate < current_date and startDate > current_date - 7
+    # query to get the total donations per week
+    # select * from Donations
+    # where startDate < current_date and startDate > current_date - 7
     ID = session["user_id"]
     db = get_db()
     cur = db.cursor()
@@ -600,6 +593,7 @@ def getWeeklyReport():
 
 
 ###################################################################################################
+
 
 # --------------------- html ---------------------#
 @app.route("/", defaults={"path": "index.html"})
