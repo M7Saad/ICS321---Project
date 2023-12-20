@@ -13,7 +13,7 @@ body{
 table{
     border-collapse: collapse;
     width: 100%;
-    color: #b9e7da;
+    color: #538175;
     font-family: monospace;
     font-size: 25px;
     text-align: left;
@@ -28,10 +28,13 @@ tr:nth-child(even){
 tr:nth-child(odd){
     background-color: #d0d0d0
 }
+/*make forms transparent*/
+
 </style>
 <body>
     <h2>Users!</h2>
-    <table border="1">
+
+    <table>
         <thead>
             
                 <th>id</th>
@@ -40,6 +43,7 @@ tr:nth-child(odd){
                 <th>Type</th>
                 <th>BloodType</th>
                 <th>Address</th>
+                <th>Diseases</th>
                 <th>Action</th>
         </thead>
     </table>
@@ -49,16 +53,27 @@ tr:nth-child(odd){
             "id": "0069",
             "name": "Hamza",
             "email": "hamza69@gmail.com",
-            "Type": "Donor",
-            "BloodType": "A+",
-            "Address": "Mekkah"
+            "type": "Donor",
+            "bloodType": "A+",
+            "address": "Mekkah",
+            "diseases": ""
         },{
             "id": "0070",
             "name": "mohammed",
             "email": "mo@m",
-            "Type": "Donor",
-            "BloodType": "A+",
-            "Address": "Mekkah"
+            "type": "Donor",
+            "bloodType": "A+",
+            "address": "Mekkah",
+            "diseases": "cancer, aids, diabetes",
+        },{
+            "id": "0071",
+            "name": "ahmed",
+            "email": "ahmed@g",
+            "type": "Recipient",
+            "bloodType": "B-",
+            "address": "Riyadh",
+            "disease": "diabetes",
+
          }
         
     ];
@@ -74,9 +89,9 @@ tr:nth-child(odd){
                     var cell = row.insertCell();
                     if (key === 'id') {
                         cell.textContent = value;
-                    } else if (key === 'Type' || key === 'BloodType') {
+                    } else if (key === 'type' || key === 'bloodType') {
                         var select = document.createElement('select');
-                        var options = key === 'Type' ? typeOptions : bloodTypeOptions;
+                        var options = key === 'type' ? typeOptions : bloodTypeOptions;
                         options.forEach(function(optionValue) {
                             var option = new Option(optionValue, optionValue, value === optionValue, value === optionValue);
                             select.appendChild(option);
@@ -107,35 +122,33 @@ tr:nth-child(odd){
             var row = event.target.parentNode.parentNode;
             var inputs = row.querySelectorAll('input');
             var selects = row.querySelectorAll('select');
-            var id = row.cells[0].textContent; 
+            var id = row.cells[0].textContent; // Get the ID from the first cell
             if (event.target.textContent === 'Edit') {
                 inputs.forEach(input => input.readOnly = false);
                 selects.forEach(select => select.disabled = false);
                 event.target.textContent = 'Save';
             } else {
                 // Prepare data to send to backend
-                var updatedData = {
-                    id: id,
-                    name: inputs[0].value,
-                    email: inputs[1].value,
-                    Type: selects[0].value,
-                    BloodType: selects[1].value,
-                    Address: inputs[2].value
-                };
+                var updatedData = { id: id };
+                inputs.forEach((input, index) => {
+                    if (!input.readOnly) { // Check if the input field was editable
+                        updatedData[input.getAttribute('name')] = input.value;
+                    }
+                });
+                selects.forEach(select => {
+                    if (!select.disabled) { // Check if the select was editable
+                        updatedData[select.getAttribute('name')] = select.value;
+                    }
+                });
+                
                 sendDataToUpdate('/update-user', updatedData);
+                // Make fields read-only again
                 inputs.forEach(input => input.readOnly = true);
                 selects.forEach(select => select.disabled = true);
                 event.target.textContent = 'Edit';
             }
         }
-    
-        function handleDelete(event) {
-            var row = event.target.parentNode.parentNode;
-            var id = row.cells[0].textContent; // Get the ID from the first cell
-            sendDataToDelete('/delete-user', { id: id });
-            row.remove(); // Optionally remove the row from the table
-        }
-    
+        
         function sendDataToUpdate(url, data) {
             fetch(url, {
                 method: 'POST',
@@ -152,7 +165,12 @@ tr:nth-child(odd){
                 console.error('Error:', error);
             });
         }
-    
+        function handleDelete(event) {
+            var row = event.target.parentNode.parentNode;
+            var id = row.cells[0].textContent; // Get the ID from the first cell
+            sendDataToDelete('/delete-user', { id: id });
+            row.remove(); // Optionally remove the row from the table
+        }
         function sendDataToDelete(url, data) {
             fetch(url, {
                 method: 'POST',
