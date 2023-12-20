@@ -127,7 +127,10 @@
             if (result.result === "staff") {
               // Redirect to admin page
               window.location.href = "staff.html";
-            } else if (result.result === "user") {
+            } else if (
+              result.result === "donor" ||
+              result.result === "recipient"
+            ) {
               // Redirect to user page
               window.location.href = "user.html";
             } else {
