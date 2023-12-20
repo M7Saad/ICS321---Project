@@ -142,11 +142,12 @@
       function displaySearchResults(data) {
         const resultsDiv = document.getElementById("searchResults");
         resultsDiv.innerHTML = "";
-        if (data.length === 0) {
+        console.log(data);
+        if (data === "Invalid ID") {
           alert("Error: User not found");
           return;
         }
-         
+
         console.log(data);
         const infoTable = document.createElement("table");
         infoTable.className = "searchResultsTable";
