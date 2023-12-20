@@ -89,7 +89,7 @@ def addUser():
     cur = db.cursor()
     # generate id by counting the number of rows in the table
     cur.execute("SELECT MAX(id) FROM person")
-    id = cur.fetchone()[0]
+    id = cur.fetchone()[0] + 1
 
     # insert the data into the person table
     cur.execute(
@@ -159,6 +159,9 @@ def searchID():
         (data.get("id"),),
     )
     person = cur.fetchone()
+
+    if person is None:
+        return {"result": "Invalid ID"}
     # get type of user
     cur.execute(
         "SELECT role FROM auth WHERE id = %s",
@@ -185,26 +188,23 @@ def searchID():
         diseases_str = diseases_str[:-2]
     ##
 
-    if person is None:
-        return {}
-    else:
-        return {
-            "result": {
-                # from person
-                "id": person[0],
-                "name": person[1],
-                "address": person[2],
-                "phone": person[3],
-                "email": person[4],
-                "dob": person[5],
-                # type
-                "type": type,
-                # from user
-                "bloodtype": user[1],
-                "weight": user[2],
-                "disease": diseases_str,
-            }
+    return {
+        "result": {
+            # from person
+            "id": person[0],
+            "name": person[1],
+            "address": person[2],
+            "phone": person[3],
+            "email": person[4],
+            "dob": person[5],
+            # type
+            "type": type,
+            # from user
+            "bloodtype": user[1],
+            "weight": user[2],
+            "disease": diseases_str,
         }
+    }
 
 
 @app.route("/remove", methods=["POST"])
@@ -265,6 +265,9 @@ def getUsers():
         diseases_str = ""
         for disease in diseases:
             diseases_str += disease[1] + ", "
+
+        # keep the date of birth, without the time
+
         users[i] = {
             # from person
             "id": users[i][0],
