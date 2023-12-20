@@ -109,35 +109,24 @@ body {
 
 </div>
 <script>
-  // Function to log out
-function logOut() {
-// Redirect to the login page
-window.location.href = "index.html";
-}
+    function logOut() {
+        window.location.href = "index.html";
+    }
+    function searchHistory() {
+        window.location.href = "userHistory.html";
+    }
 
-  // Functionality 1: Search for own history
-  function searchHistory() {
-    // Implement your logic to fetch and display the user's history
-    window.location.href = "userHistory.html";
-  }
+    function submitAgreement() {
+        alert("Agreement submitted successfully!");
+    }
 
-  // Functionality 2: Agree for blood donation/receiving
-  function submitAgreement() {
-    // Implement your logic to handle the agreement submission
-    alert("Agreement submitted successfully!");
-  }
+    function updateInformation() {
+        window.location.href = "UserInfo.html"
+    }
 
-  // Functionality 3: Update personal information
-  function updateInformation() {
-    // Implement your logic to handle the information update
-    window.location.href = "UserInfo.html"
-  }
-
-  // Functionality 4: Do payments for receiving blood
-  function makePayment() {
-    // Implement your logic to handle the payment process
-    document.getElementById('paymentResult').innerHTML = "Payment successful!";
-  }
+    function makePayment() {
+        document.getElementById('paymentResult').innerHTML = "Payment successful!";
+    }
 </script>
 
 </body>
