@@ -145,14 +145,13 @@ def addUser():
     return {"result": "success"}
 
 
-@app.route("/searchID", methods=["POST", "GET"])
+@app.route("/searchID", methods=["POST"])
 def searchID():
     """
     Searches for a user by id
     data will include "id"
     """
-    #data = request.get_json()
-    data = {"id": 10}
+    data = request.get_json()
     db = get_db()
     cur = db.cursor()
     cur.execute(
@@ -207,6 +206,48 @@ def searchID():
                 "disease": diseases_str,
             }
         }
+
+
+@app.route("/remove", methods=["POST"])
+def remove():
+    """
+    Removes a user from the database
+    data will include "id"
+    """
+    data = request.get_json()
+    db = get_db()
+    cur = db.cursor()
+    # remove from auth
+    cur.execute(
+        "DELETE FROM auth WHERE id = %s",
+        (data.get("id"),),
+    )
+    # remove from donor
+    cur.execute(
+        "DELETE FROM donor WHERE id = %s",
+        (data.get("id"),),
+    )
+    # remove from recipient
+    cur.execute(
+        "DELETE FROM recipient WHERE id = %s",
+        (data.get("id"),),
+    )
+    # remove from disease_history
+    cur.execute(
+        "DELETE FROM disease_history WHERE id = %s",
+        (data.get("id"),),
+    )
+    # remove from user
+    cur.execute(
+        'DELETE FROM "user" WHERE id = %s',
+        (data.get("id"),),
+    )
+    # remove from person
+    cur.execute(
+        "DELETE FROM person WHERE id = %s",
+        (data.get("id"),),
+    )
+    return {"result": "success"}
 
 
 # --------------------- html ---------------------#
