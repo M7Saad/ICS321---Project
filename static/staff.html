@@ -36,12 +36,21 @@
       cursor: pointer;
     }
     .searchForm {
-        display: none;
-        text-align: center;
-        margin-top: 20px;
+      display: none;
+      text-align: center;
+      margin-top: 20px;
     }
     .searchForm input, .searchForm button {
-        margin: 10px;
+      margin: 10px;
+    }
+    .searchResultsTable {
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+      font-family: monospace;
+      font-size: 25px;
+      text-align: middle;
+      margin-left: auto;
     }
   </style>
   <body>
@@ -135,8 +144,8 @@
   
       const infoTable = document.createElement('table');
       infoTable.className = 'searchResultsTable';
-  
-      for (const key in data) {
+      let keys = ['id', 'name', 'address', 'phone', 'email', 'dob', 'bloodtype', 'weight', 'type', 'disease'];
+      for (const key in keys) {
           const row = infoTable.insertRow();
           const cellKey = row.insertCell(0);
           const cellValue = row.insertCell(1);
