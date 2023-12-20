@@ -107,25 +107,44 @@
     });
 
     function sendIdToBackend(id) {
-        // Placeholder for backend call
-        console.log("Sending ID to backend:", id);
-        // Example of sending data to backend
-        fetch("/searchID", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ id: id })
-        })
-        .then(response => response.json())
-        .then(data => {
-              console.log('Success:', data);
-              // Display the data on the page
-              document.getElementById('result').innerHTML = data;
-            })            .catch((error) => {
-            console.error('Error:', error);
-        });
-    }
+      // Placeholder for backend call
+      console.log("Sending ID to backend:", id);
+      // Example of sending data to backend
+      fetch("/searchID", {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ id: id })
+      })
+      .then(response => response.json())
+      .then(data => {
+            console.log('Success:', data);
+            // Format and display the data on the page
+            displaySearchResults(data.result);
+          })
+      .catch((error) => {
+          console.error('Error:', error);
+      });
+  }
+  
+  function displaySearchResults(data) {
+      const resultsDiv = document.getElementById('searchResults');
+      resultsDiv.innerHTML = ''; // Clear previous results
+  
+      const infoTable = document.createElement('table');
+      infoTable.className = 'searchResultsTable';
+  
+      for (const key in data) {
+          const row = infoTable.insertRow();
+          const cellKey = row.insertCell(0);
+          const cellValue = row.insertCell(1);
+          cellKey.innerHTML = `<strong>${key}</strong>`;
+          cellValue.innerHTML = data[key];
+      }
+  
+      resultsDiv.appendChild(infoTable);
+    }  
     </script>
   </body>
 </html>
