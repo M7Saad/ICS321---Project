@@ -51,7 +51,7 @@
   </style>
 
   <body>
-    <form action="user.html">
+    <form>
       <div>
         <label for="id">Id</label>
         <input type="text" id="id" name="id" value="" />
@@ -137,6 +137,10 @@
         })
           .then((response) => response.json())
           .then((data) => {
+            //show alert for 1 second 
+            alert("Updated Successfully");
+            //go to user.html
+            window.location.href = "/user.html";
             console.log("Success:", data);
           })
           .catch((error) => {
