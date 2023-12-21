@@ -11,7 +11,6 @@
       form {
         text-align: center;
         margin-bottom: 20px;
-
       }
       h1 {
         text-align: center;
@@ -37,7 +36,8 @@
         color: #fff;
         cursor: pointer;
       }
-      input[type="date"],input[type="text"] {
+      input[type="date"],
+      input[type="text"] {
         width: 100%;
         height: 30px;
         border-width: 3px;
@@ -101,11 +101,11 @@
             reportOutput.innerHTML = "";
             data.result.forEach((item) => {
               reportOutput.innerHTML += `
-            Donation ID: ${item[0] || "-"}, 
-            Expiry Date: ${item[1] || "-"}, 
-            Blood Type: ${item[2] || "-"}, 
+            Donation ID: ${item[0] || "-"},
+            Expiry Date: ${item[1] || "-"},
+            Blood Type: ${item[2] || "-"},
             donated On: ${item[3] || "-"},
-            Recipient ID: ${item[4] || "-"}, 
+            Recipient ID: ${item[4] || "-"},
           <br>`;
             });
           })
@@ -136,8 +136,9 @@
             reportOutput.innerHTML = "";
             data.result.forEach((item) => {
               reportOutput.innerHTML += `
-            Event ID: ${item.event_id || "-"}, 
-            Total Donation: ${item.total_donation || "0"}<br>`;
+            Event ID: ${item.event_id || "-"},
+            Total Donation: ${item.total_donation || "0"}
+            location:${item.location || "-"} <br>`;
             });
           })
           .catch((error) => console.error("Error:", error));

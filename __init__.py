@@ -572,7 +572,7 @@ def getreport3():
     db = get_db()
     cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(
-        """SELECT event.event_id, COALESCE(SUM(donation.units), 0) as total_donation
+        """SELECT event.event_id, event.location, COALESCE(SUM(donation.units), 0) as total_donation
     FROM event
     LEFT JOIN donation ON event.event_id = donation.event_id
     GROUP BY event.event_id;""",
