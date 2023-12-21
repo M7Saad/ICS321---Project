@@ -51,7 +51,7 @@
   </style>
 
   <body>
-    <form action="">
+    <form action="user.html">
       <div>
         <label for="id">Id</label>
         <input type="text" id="id" name="id" value="" />
@@ -98,7 +98,6 @@
         fetch(API_URL) //حط الرابط اللي تبي تجيب منه الاي بي اي
           .then((response) => response.json())
           .then((data) => {
-            console.log("Success:", data);
             document.getElementById("id").value = data.id;
             document.getElementById("name").value = data.name;
             document.getElementById("email").value = data.email;
