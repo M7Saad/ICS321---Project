@@ -3,16 +3,34 @@
   <head>
     <title>History</title>
     <style>
+      body {
+        background: #444;
+        color: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
       table {
-        width: 100%;
         border-collapse: collapse;
+        width: 80%;
+        margin-top: 20px;
       }
-      th,
-      td {
-        border: 1px solid black;
-        padding: 8px;
+      th, td {
         text-align: left;
+        padding: 8px;
       }
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+      tr:nth-child(odd) {
+        background-color: #d0d0d0;
+      }
+      th {
+        background-color: #588c7e;
+        color: white;
+      }
+      
+
     </style>
   </head>
   <body>
