@@ -1,43 +1,46 @@
-
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BloodReq</title>
-</head>
-<body>
+  </head>
+  <body>
     <h1>Blood Requests</h1>
 
-    <div id="bloodRequestList">
-        <!-- Blood request items will be dynamically added here -->
+    <div id="userList">
+      <!-- Blood request items will be dynamically added here -->
     </div>
 
     <script>
-        const url = '/request'// حط الطريق
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                // Process the retrieved blood requests and dynamically add them to the page
-                const bloodRequestList = document.getElementById('bloodRequestList');
+      const url = "/getUsers"; // Update the URL
+      fetch(url)
+        .then((response) => response.json())
+        .then((users) => {
+          // Process the retrieved users and dynamically add them to the page
+          const userList = document.getElementById("userList");
+          users = users.result;
+          console.log(users);
+          users.forEach((user) => {
+            if (user.id === 4) {
+              const userItem = document.createElement("div");
+              userItem.innerHTML = `
+        <h3>${user.name}</h3>
+        <p>ID: ${user.id}</p>
+        <button onclick = "this.parentNode.innerHTML = ''">approve for ${user.name}</button>
 
-                data.forEach(bloodRequest => {
-                    const bloodRequestItem = document.createElement('div');
-                    bloodRequestItem.innerHTML = `
-                        <h3>${bloodRequest.title}</h3>
-                        <p>${bloodRequest.description}</p>
-                        <button onclick="processBloodRequest(${bloodRequest.id})">Process</button>
-                    `;
+      `;
 
-                    bloodRequestList.appendChild(bloodRequestItem);
-                });
-            });
+              userList.appendChild(userItem);
+            }
+          });
+        });
 
-        // Function to process a blood request
-        function processBloodRequest(bloodRequestId) {
-            console.log(`Processing blood request with ID: ${bloodRequestId}`);
-        }
+      // Function to process a blood request
+      function processBloodRequest(bloodRequestId) {
+        console.log(`Processing blood request with ID: ${bloodRequestId}`);
+      }
     </script>
-</body>
+  </body>
 </html>
 <!-- END: abpxx6d04wxr -->

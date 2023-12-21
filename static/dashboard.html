@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+      }
+      form {
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <form id="reportForm">
+      <label for="reportType">Select a report:</label>
+      <select id="reportType" name="reportType">
+        <option value="donations">
+          List of all blood donations received in a week or a month
+        </option>
+        <option value="bloodType">
+          List the aggregated amount available for each blood type
+        </option>
+        <option value="collectionDrive">
+          List all Collection Drive and total blood collected during each drive
+        </option>
+        <option value="payments">
+          All Payments that have been confirmed as completed
+        </option>
+      </select>
+      <input type="submit" value="Generate Report" />
+    </form>
+    <div id="reportOutput"></div>
+
+    <script>
+      document
+        .getElementById("reportForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault(); // Prevent the form from being submitted normally
+
+          // TODO: Generate the report based on the selected option
+          var reportType = document.getElementById("reportType").value;
+          var reportOutput = document.getElementById("reportOutput");
+
+          switch (reportType) {
+            case "donations":
+              getreport();
+              break;
+            case "bloodType":
+              reportOutput.textContent = getReport2();
+              break;
+            case "collectionDrive":
+              reportOutput.textContent = getreport3();
+              break;
+            case "payments":
+              reportOutput.textContent =
+                "recipent ID:  4; paid: 'YES', unitsCollected:40";
+              break;
+          }
+        });
+      //getreport 2:
+      function getreport() {
+        fetch("/getReport")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            reportOutput.innerHTML = "";
+            data.result.forEach((item) => {
+              reportOutput.innerHTML += `
+            Donation ID: ${item[0] || "-"}, 
+            Expiry Date: ${item[1] || "-"}, 
+            Blood Type: ${item[2] || "-"}, 
+            donated On: ${item[3] || "-"},
+            Recipient ID: ${item[4] || "-"}, 
+          <br>`;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+      function getReport2() {
+        fetch("getReport2")
+          .then((response) => response.json())
+          .then((data) => {
+            data = data.result;
+            console.log(data);
+            // data is an array of arrays, where each sub-array is like ['B+', 71]
+            var reportOutput = document.getElementById("reportOutput");
+            reportOutput.innerHTML = "";
+            data.forEach(([bloodType, amount]) => {
+              reportOutput.innerHTML += `Blood Type: ${bloodType}, Amount: ${amount}<br>`;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+      function getreport3() {
+        reportOutput.textContent =
+          "Generating report: List all Collection Drive and total blood collected during each drive...";
+        fetch("/getReport3")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            reportOutput.innerHTML = "";
+            data.result.forEach((item) => {
+              reportOutput.innerHTML += `
+            Event ID: ${item.event_id || "-"}, 
+            Total Donation: ${item.total_donation || "0"}<br>`;
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      }
+    </script>
+  </body>
+</html>

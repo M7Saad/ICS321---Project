@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>History</title>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        text-align: left;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>History</h1>
+    <table id="historyTable">
+      <thead>
+        <tr>
+          <th>Units</th>
+          <th>Date</th>
+          <th>Event ID</th>
+          <th>Staff ID</th>
+          <th>Donation ID</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Donation history will be inserted here -->
+      </tbody>
+    </table>
+
+    <script>
+      window.onload = function () {
+        fetch("/getHistory")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const historyTable = document.getElementById("historyTable");
+            data.result.forEach((item) => {
+              const row = historyTable.insertRow(-1);
+              row.insertCell(0).textContent = item.units || "-";
+              row.insertCell(1).textContent = item.Date || "-";
+              row.insertCell(2).textContent = item.event_id || "-";
+              row.insertCell(3).textContent = item.staff_id || "-";
+              row.insertCell(4).textContent = item.donation_id || "-";
+            });
+          })
+          .catch((error) => console.error("Error:", error));
+      };
+    </script>
+  </body>
+</html>

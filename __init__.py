@@ -1,4 +1,6 @@
 import psycopg2
+import psycopg2.extras
+
 from flask import Flask, g, request, send_from_directory, session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -487,53 +489,57 @@ def updateUserinfo():
 @app.route("/getHistory", methods=["get"])
 def getHistory():
     ID = session["user_id"]
+    ROLE = session["user_role"]
     db = get_db()
-    cur = db.cursor()
-    cur.execute(
-        "SELECT * FROM DONATION WHERE donor_id = %s",
-        (ID,),
-    )
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    # if donor
+    if ROLE == "donor":
+        cur.execute(
+            "SELECT * FROM DONATION WHERE donor_id = %s",
+            (ID,),
+        )
+    else:
+        # if recipient
+        cur.execute(
+            """SELECT bag.*, donation.* FROM bag 
+ right JOIN donation ON bag.donation_id = donation.donation_id 
+WHERE bag.pid = 4;""",
+            (ID,),
+        )
     events = cur.fetchall()
+
     ans = []
     for event in events:
-        ans.append(
-            {
-                "donation_id": event[0],
-                "units": event[1],
-                "date": event[2].strftime("%Y-%m-%d"),
-            }
-        )
+        event = dict(event)
+        event["Date"] = event["Date"].strftime("%Y-%m-%d")
+        ans.append(event)
+
     # get
     return {"result": ans}
 
 
 ##########################################################################################
 @app.route("/getReport", methods=["get"])
-def getEventReport():
-    # query to get the total donations per event
-    # select eventID,startDate, endDate, sum(amount) from events, Donations
-    # where events.eventID = Donations.eventID
-    # group by eventID
+def getReport():
+    # 1. List of all blood donations received in a week or a month.
 
     ID = session["user_id"]
     db = get_db()
-    cur = db.cursor()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(
-        "SELECT event.event_ID ,event.start_date, event.end_date, sum(Donation.units) from event, Donation where event.event_id = donation.event_id group by event.event_id",
+        """SELECT * 
+        FROM bag 
+        where bag.date_of_receving >= NOW() - INTERVAL '30 days'
+        AND pid IS NOT NULL;""",
     )
     events = cur.fetchall()
-    ans = []
     for event in events:
-        ans.append(
-            {
-                "eventID": event[0],
-                "startDate": event[1].strftime("%Y-%m-%d"),
-                "endDate": event[2].strftime("%Y-%m-%d"),
-                "amount": event[3],
-            }
-        )
+        event["date_of_receving"] = event["date_of_receving"].strftime("%Y-%m-%d")
+        event["expire_date"] = event["expire_date"].strftime("%Y-%m-%d")
+        event = dict(event)
+
     # get
-    return {"result": ans}
+    return {"result": events}
 
 
 @app.route("/getReport2", methods=["get"])
@@ -543,79 +549,40 @@ def getBloodTypeReport():
     # where events.eventID = Donations.eventID and Donations.donor_id = users.id
     # group by eventID, blood_type
 
-    ID = session["user_id"]
     db = get_db()
-    cur = db.cursor()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(
-        "SELECT event.event_ID ,event.start_date, event.end_date, sum(Donation.units) from event, Donation where event.event_id = donation.event_id group by event.event_id",
+        """
+        SELECT u.blood_type, SUM(d.units) as total_units
+        FROM donation d
+        JOIN "user" u ON d.donor_id = u.id
+        GROUP BY u.blood_type;
+        """
     )
     events = cur.fetchall()
-    ans = []
-    for event in events:
-        ans.append(
-            {
-                "eventID": event[0],
-                "startDate": event[1].strftime("%Y-%m-%d"),
-                "endDate": event[2].strftime("%Y-%m-%d"),
-                "blood_type": event[3],
-                "amount": event[4],
-            }
-        )
+
     # get
-    return {"result": ans}
+    return {"result": events}
 
 
 @app.route("/getReport3", methods=["get"])
-def getWeeklyReport():
-    # query to get the total donations per week
-    # select * from Donations
-    # where startDate < current_date and startDate > current_date - 7
-    ID = session["user_id"]
-    db = get_db()
-    cur = db.cursor()
-    cur.execute(
-        "select * from Donations where startDate < current_date and startDate > current_date - 7",
-    )
-    events = cur.fetchall()
-    ans = []
-    for event in events:
-        ans.append(
-            {
-                "donation_id": event[0],
-                "donor_id": event[1],
-                "eventID": event[2],
-                "amount": event[3],
-                "startDate": event[4].strftime("%Y-%m-%d"),
-            }
-        )
-    # get
-    return {"result": ans}
+def getreport3():
+    # 1. List of all blood donations received in an event.
 
-@app.route("/getReport4", methods=["get"])
-def getMonthlyReport():
-    # query to get the total donations per month
-    # select * from Donations
-    # where startDate < current_date and startDate > current_date - 30
-    ID = session["user_id"]
     db = get_db()
-    cur = db.cursor()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
     cur.execute(
-        "select * from Donations where startDate < current_date and startDate > current_date - 30",
+        """SELECT event.event_id, COALESCE(SUM(donation.units), 0) as total_donation
+    FROM event
+    LEFT JOIN donation ON event.event_id = donation.event_id
+    GROUP BY event.event_id;""",
     )
+
     events = cur.fetchall()
-    ans = []
-    for event in events:
-        ans.append(
-            {
-                "donation_id": event[0],
-                "donor_id": event[1],
-                "eventID": event[2],
-                "amount": event[3],
-                "startDate": event[4].strftime("%Y-%m-%d"),
-            }
-        )
+    events = [dict(event) for event in events]
     # get
-    return {"result": ans}
+    return {"result": events}
+
 
 @app.route("/getReport5", methods=["get"])
 def getPaymentsReport():
@@ -641,6 +608,8 @@ def getPaymentsReport():
         )
     # get
     return {"result": ans}
+
+
 ###################################################################################################
 @app.route("/request", methods=["POST"])
 def requestBlood():
@@ -662,8 +631,6 @@ def requestBlood():
         (id, data.get("bloodtype"), data.get("units"), pid),
     )
     return {"result": "success"}
-
-
 
 
 # --------------------- html ---------------------#

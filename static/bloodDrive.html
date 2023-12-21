@@ -63,32 +63,29 @@
     <script>
       // send to BE
 
-      submit = document.getElementById("submit");
+      document.getElementById("submit").addEventListener("click", (event) => {
+        event.preventDefault();
 
-      submit.addEventListener("click", () => {
-        stDate = document.getElementById("start").value;
-        enDate = document.getElementById("end").value;
-        loc = document.getElementById("location").value;
-        console.log(JSON.stringify({ stDate, enDate, loc }));
+        const stDate = document.getElementById("start").value;
+        const enDate = document.getElementById("end").value;
+        const loc = document.getElementById("location").value;
+
+        const controller = new AbortController();
+        const { signal } = controller;
+
+        setTimeout(() => controller.abort(), 5000); // 5000 ms timeout
+
         fetch("/adddrive", {
           method: "POST",
           body: JSON.stringify({ stDate, enDate, loc }),
           headers: {
             "Content-Type": "application/json",
           },
-        })
-          .then((response) => response.json())
-          .then((result) => {
-            console.log(result);
-            if (result.result === "success") {
-              alert("Blood Drive added successfully");
-            } else {
-              alert("Error adding Blood Drive");
-            }
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+          signal,
+        });
+        // go the the staff page after displaying the alert for 1.5 seconds
+        alert("Blood Drive Added Successfully");
+        window.location.href = "/staff.html";
       });
     </script>
   </body>
