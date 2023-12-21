@@ -5,6 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BloodReq</title>
   </head>
+    <style>
+        body {
+        background: #444;
+        color: white;
+        }
+        .bigDiv {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        }
+        form {
+        width: 100%;
+        margin: 0 20;
+        padding: 20px 10px;
+        }
+        label {
+        width: 90%;
+        position: relative;
+        margin-bottom: 20px;
+        margin-right: 15px;
+        }
+        .smallDiv {
+        width: 100%;
+        position: relative;
+        margin-bottom: 20px;
+        margin-right: 15px;
+        }
+        input,
+        select {
+        display: block;
+        width: 60%;
+        padding: 16px 16px 16px 50px;
+        margin: 20px, 20px;
+        background: #fafafa;
+        color: #757575;
+        font-family: inherit;
+        font-size: 16px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        transition: 0.3s;
+        }
+        input:focus,
+        select:focus {
+        outline: 0;
+        border-color: #6eb4ea;
+        }
+        input[type=submit] {
+        margin-left: 30%;
+        display: block;
+        width: 30%;
+        padding: 16px;
+        background: #6eb4ea;
+        color: #fff;
+        font-family: inherit;
+        font-size: 16px;
+        border-radius: 5px;
+        }
+        input[type=submit]:hover {
+        background: #6eb4ea;
+        color: #fff;
+        cursor: pointer;
+        }
+        input[type=submit]:active {
+        background: #6eb4ea;
+        color: #fff;
+        }
+        input[type=submit]:focus {
+        outline: 0;
+        border-color: #6eb4ea;
+        }
+    </style>
   <body>
     <h1>Blood Requests</h1>
 
