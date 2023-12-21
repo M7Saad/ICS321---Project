@@ -586,14 +586,12 @@ def getreport3():
 
 @app.route("/getReport5", methods=["get"])
 def getPaymentsReport():
-    # query to get the total payments per month
-    # select * from payments
-    # where startDate < current_date and startDate > current_date - 30
+    
     ID = session["user_id"]
     db = get_db()
     cur = db.cursor()
     cur.execute(
-        "select * from payments where startDate < current_date and startDate > current_date - 30",
+        "select * from payments",
     )
     events = cur.fetchall()
     ans = []
@@ -613,19 +611,17 @@ def getPaymentsReport():
 ###################################################################################################
 @app.route("/request", methods=["POST"])
 def requestBlood():
-    """
-    Adds a new blood request to the database
-    data will include "bloodtype", "units"
-    """
+    
+    # Adds a new blood request to the database
+    # data will include "bloodtype", "units"
+    
     data = request.get_json()
     db = get_db()
     cur = db.cursor()
-    # generate id by counting the number of rows in the table
     cur.execute("SELECT MAX(request_id) FROM request")
     row = cur.fetchone()
     id = row[0] + 1 if row and row[0] is not None else 1
     pid = session["user_id"]
-    # insert the data into the blood_drive table
     cur.execute(
         "INSERT INTO request VALUES (%s, %s, %s, %s)",
         (id, data.get("bloodtype"), data.get("units"), pid),
